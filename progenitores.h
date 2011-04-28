@@ -1,9 +1,10 @@
 struct Animal{
     void (*mostraratributos) (void *);
     void (*ingresardato) (void  *);
-    char tipo;    // ‘h’ o‘c’
+    char tipo;    // ‘h’ o‘c’ (o 'p'!)
         struct AnimalCarnivoro * pAnimalC;
         struct AnimalHerbivoro * pAnimalH;
+        struct Planta *pPlanta;
     // es ptr animalcarnivoro o animalherbivoro.
 };
 
@@ -20,4 +21,9 @@ struct AnimalHerbivoro{
      int defensa;
      int nro_comidas;
      int rand_mov;
+};
+
+struct Planta{      //La estructura planta permite darle un poco más de personalidad
+    char nombre[20];//a distintas plantas en el juego.
+    int turnos;
 };

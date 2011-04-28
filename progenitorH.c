@@ -10,4 +10,5 @@ void crearHerbivoro(struct Animal **ptr,char *name,int hp,int def, int mov)
     (*ptr)->tipo = 'H';
     (*ptr)->pAnimalH = paH;   
     (*ptr)->pAnimalC = NULL;
+    (*ptr)->pPlanta = NULL;
 }

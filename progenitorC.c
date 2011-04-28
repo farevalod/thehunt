@@ -9,4 +9,5 @@ void crearCarnivoro(struct Animal **ptr,char *name,int hp,int atk)
     (*ptr)->tipo = 'C';
     (*ptr)->pAnimalC = paC;   
     (*ptr)->pAnimalH = NULL;
+    (*ptr)->pPlanta = NULL;
 }
