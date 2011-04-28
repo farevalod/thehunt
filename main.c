@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "listaSeresVivos.c"
 #include "progenitorC.c"
 #include "progenitorH.c"
@@ -8,6 +9,7 @@
 
 int main()
 {
+    srand( time(NULL) );
     struct Nodo *head = NULL;
     struct Nodo *temp = NULL;
     FILE *entrada = fopen("entrada.txt","r");
@@ -35,11 +37,11 @@ int main()
         {
             p = (struct Animal *)malloc(sizeof(struct Animal));
             if(tipo == 'c' || tipo == 'C')
-                crearCarnivoro(&p,"CarnivoroPrueba",100,5);//TODO: Funciones de nombre, hp y atk random.
+                crearCarnivoro(&p);
             else if(tipo == 'h' || tipo == 'H')
-                crearHerbivoro(&p,"HerviboroPrueba",12,1,2);//TODO: Funciones random de nombre, hp, def y mov
+                crearHerbivoro(&p);
             else if(tipo == 'p' || tipo == 'P')
-                crearPlanta(&p,"PlantaPrueba",2);//TODO; Función random nombre y turnos.
+                crearPlanta(&p);
             
             insert(&head,p);
         }
@@ -51,11 +53,11 @@ int main()
     {
         tipo = temp->ptrAnimal->tipo;
         if(tipo == 'c' || tipo == 'C')
-            printf("prueba:%s\n",temp->ptrAnimal->pAnimalC->nombre);
+            printf("Carnivoro:%s\n",temp->ptrAnimal->pAnimalC->nombre);
         else if(tipo == 'h' || tipo == 'H')
-            printf("prueba:%s\n",temp->ptrAnimal->pAnimalH->nombre);
+            printf("Herbivoro:%s\n",temp->ptrAnimal->pAnimalH->nombre);
         else if(tipo == 'p' || tipo == 'P')
-            printf("prueba:%s\n",temp->ptrAnimal->pPlanta->nombre);
+            printf("Planta:%s\n",temp->ptrAnimal->pPlanta->nombre);
         temp=temp->next;
     }
     return 0;

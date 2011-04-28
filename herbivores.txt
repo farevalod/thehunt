@@ -1,0 +1,17 @@
+4
+Conejo
+12
+1
+2
+Ciervo
+40
+4
+3
+Vaca
+50
+3
+1
+Zebra
+40
+4
+3
