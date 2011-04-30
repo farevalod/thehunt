@@ -1,4 +1,3 @@
-/* SampleApplication.c - A C Program using the LinkedList class */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

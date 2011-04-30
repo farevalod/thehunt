@@ -2,8 +2,8 @@
 Leon
 100
 6
-Leopardo
-80
+Oso Negro
+120
 4
 Jaguar
 90

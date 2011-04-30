@@ -1,27 +1,42 @@
 /******** Archivo: listaEnlazada.c ********************
 Descripcion:    Implementación de la lista enlazada.
-Funciones:      void insert(struct Nodo **head, void *ptrAnimal )
+Funciones:      void insert(struct Nodo **head, void *ptrAnimal)
 ************************************************/
 
 #include <malloc.h>
 #include <stdio.h>
 #include "listaSeresVivos.h"
 
+/******** Funcion: insert ********
+Descripcion: Inserta un nodo en la lista enlazada.
+Parametros: 
+    struct Nodo **head: Cabecera de la lista. Puede ser NULL.
+    void *ptrAnimal:    Puntero a la estructura Animal con los
+                        datos de la entidad. (Ya creado)
+Retorno: void. Modifica la lista que recibe apuntada por head.
+************************************************/
+
 void insert(struct Nodo **head, void *ptrAnimal )
 {
     struct Nodo *top;
     struct Nodo *newNode;
     newNode = (struct Nodo *)(malloc(sizeof(struct Nodo)));
-    newNode->ptrAnimal = (struct Animal*)ptrAnimal;
+    if(newNode == NULL)
+    {
+        printf("ERROR: malloc devuelve puntero NULL.\n");
+        printf("Posible causa: OOM\n);
+        return 1;
+    }
+    newNode->ptrAnimal = (struct Animal*)ptrAnimal; //Se enlaza la entidad al nodo.
     newNode->next = NULL;
-    if(*head==NULL)
+    if(*head==NULL)         //Lista vacía: El nodo nuevo es la cabecera.
     {
         *head = newNode;
         return;
     }
     top = *head;
-    while(top->next!=NULL)
+    while(top->next!=NULL)  //Lista no-vacía: Se recorre hasta el final
         top=top->next;
-    top->next=newNode;
+    top->next=newNode;      //Y se agrega el nuevo nodo.
     return;
 }
