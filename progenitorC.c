@@ -34,8 +34,8 @@ void getDatosCarnivoro(char *name, int *hp, int *atk, int n)
     for(i=0;i<n;i++)
     {
         fscanf(carnivoreData,"%s",name);
-        fscanf(carnivoreData,"%d",&hp);
-        fscanf(carnivoreData,"%d",&atk);
+        fscanf(carnivoreData,"%d",hp);
+        fscanf(carnivoreData,"%d",atk);
     }
 }
 
@@ -53,7 +53,7 @@ void crearCarnivoro(struct Animal **ptr)
     *ptr = (struct Animal *)malloc(sizeof(struct Animal));
     getDatosCarnivoro(paC->nombre,&(paC->vida),&(paC->ataque),rand());
     paC->nro_comidas = 0;
-    (*ptr)->tipo = 'C';
+    (*ptr)->tipo = 'c';
     (*ptr)->pAnimalC = paC;
     (*ptr)->pAnimalH = NULL;
     (*ptr)->pPlanta = NULL;

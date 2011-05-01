@@ -12,7 +12,7 @@ Descripcion: Carga los datos de una planta, desde
 
 Parámetros:             
             char *name   \
-            int *trn     / Datos de la Planta.
+            int *trn     /-> Datos de la Planta.
                                           
             int n        - > Número de la planta en plants.txt
 Retorno:    void. Modifica los punteros que recibe como args.
@@ -35,7 +35,7 @@ void getDatosPlanta(char *name, int *trn, int n)
     for(i=0;i<n;i++)
     {
         fscanf(plantData,"%s",name);
-        fscanf(plantData,"%d",&trn);
+        fscanf(plantData,"%d",trn);
     }
 }
 
@@ -52,7 +52,7 @@ void crearPlanta(struct Animal **ptr)
     struct Planta *paP = (struct Planta *)malloc(sizeof(struct Planta));
     *ptr = (struct Animal *)malloc(sizeof(struct Animal));
     getDatosPlanta(paP->nombre,&(paP->turnos),rand());
-    (*ptr)->tipo = 'P';
+    (*ptr)->tipo = 'p';
     (*ptr)->pPlanta = paP;   
     (*ptr)->pAnimalC = NULL;
     (*ptr)->pAnimalH = NULL;

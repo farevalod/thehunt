@@ -3,8 +3,10 @@ Descripcion: Define Animal, AnimalCarnivoro, AnimalHerbivoro, y Planta
              Son las estructuras que guardan los datos de cada entidad.
 ************************************************/
 
-
-struct Animal{
+#ifndef PROGENITORES_H
+#define PROGENITORES_H
+struct Animal
+{
     void (*mostraratributos) (void *);
     void (*ingresardato) (void  *);
     char tipo;    // ‘h’ o‘c’ (o 'p'!)
@@ -14,14 +16,16 @@ struct Animal{
     // es ptr animalcarnivoro o animalherbivoro.
 };
 
-struct AnimalCarnivoro{
+struct AnimalCarnivoro
+{
      char nombre[20];   //Nombre de la entidad
      int vida;          //Hit Points
      int nro_comidas;   //Contador de comidas
      int ataque;        //Bonificación de ataque
 };
 
-struct AnimalHerbivoro{
+struct AnimalHerbivoro
+{
      char nombre[20];   //Nombre de la entidad
      int vida;          //Hit points
      int defensa;       //Actúa como Armor Class
@@ -29,7 +33,10 @@ struct AnimalHerbivoro{
      int rand_mov;      //Número de espacios ganados por salto.
 };
 
-struct Planta{          //La estructura planta permite darle un poco más de personalidad
+struct Planta
+{                       //La estructura planta permite darle un poco más de personalidad
     char nombre[20];    //a distintas plantas en el juego.
     int turnos;         //Las plantas más suculentas pueden alimentar por varios turnos.
 };
+
+#endif

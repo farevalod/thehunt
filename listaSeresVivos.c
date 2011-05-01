@@ -16,7 +16,7 @@ Parametros:
 Retorno: void. Modifica la lista que recibe apuntada por head.
 ************************************************/
 
-void insert(struct Nodo **head, void *ptrAnimal )
+void insert(struct Nodo **head, void *ptrAnimal)
 {
     struct Nodo *top;
     struct Nodo *newNode;
@@ -24,8 +24,8 @@ void insert(struct Nodo **head, void *ptrAnimal )
     if(newNode == NULL)
     {
         printf("ERROR: malloc devuelve puntero NULL.\n");
-        printf("Posible causa: OOM\n);
-        return 1;
+        printf("Posible causa: OOM\n");
+        return;
     }
     newNode->ptrAnimal = (struct Animal*)ptrAnimal; //Se enlaza la entidad al nodo.
     newNode->next = NULL;
@@ -40,3 +40,17 @@ void insert(struct Nodo **head, void *ptrAnimal )
     top->next=newNode;      //Y se agrega el nuevo nodo.
     return;
 }
+
+void pop(struct Nodo **head, struct Animal **ret)
+{
+    if(*head == NULL)
+    {
+        //printf("ERROR: pop() a lista vacia!\n");
+        ret = NULL;
+        return;
+    }
+    *ret = (*head)->ptrAnimal;
+    *head = (*head)->next;
+    return;
+}
+        

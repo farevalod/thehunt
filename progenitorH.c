@@ -37,9 +37,9 @@ void getDatosHerbivoro(char *name, int *hp, int *def, int *mov, int n)
     for(i=0;i<n;i++)
     {
         fscanf(herbivoreData,"%s",name);
-        fscanf(herbivoreData,"%d",&hp);
-        fscanf(herbivoreData,"%d",&def);
-        fscanf(herbivoreData,"%d",&mov);
+        fscanf(herbivoreData,"%d",hp);
+        fscanf(herbivoreData,"%d",def);
+        fscanf(herbivoreData,"%d",mov);
     }
 }
 
@@ -57,7 +57,7 @@ void crearHerbivoro(struct Animal **ptr)
     *ptr = (struct Animal *)malloc(sizeof(struct Animal));
     getDatosHerbivoro(paH->nombre,&(paH->vida),&(paH->defensa),&(paH->rand_mov),rand());
     paH->nro_comidas = 0;
-    (*ptr)->tipo = 'H';
+    (*ptr)->tipo = 'h';
     (*ptr)->pAnimalH = paH;   
     (*ptr)->pAnimalC = NULL;
     (*ptr)->pPlanta = NULL;

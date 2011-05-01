@@ -9,63 +9,66 @@ Funciones:
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "listaSeresVivos.c"
-#include "progenitorC.c"
-#include "progenitorH.c"
-#include "progenitorP.c"
+#include "window.c"
+#include "loadData.c"
+#include "ncurses.h"
 
 int main()
 {
     srand( time(NULL) );
-    struct Nodo *head = NULL;
-    struct Nodo *temp = NULL;
-    FILE *entrada = fopen("entrada.txt","r");
-    if(entrada == NULL)
-    {
-        printf("ERROR: Archivo entrada.txt no existe.\n\n");
-        printf("Se debe crear un archivo con datos para\n");
-        printf("configurar el medio ambiente antes de ejecutar!\n");
-        exit(1);
-    }
-    char tipo;  //Tipo de elemento a ingresar.
-    int num;    //Cantidad de elemento a ingresar.
-    int lim;    //Cantidad de elementos comidos para terminar el juego
-    int i;
-    struct Animal *p;
-    while(fscanf(entrada,"%c",&tipo))
-    {
-        fscanf(entrada,"%d",&num);
-        if(tipo=='*')
-        {
-            lim = num;
-            break;
-        }
-        for(i=0;i<num;i++)
-        {
-            p = (struct Animal *)malloc(sizeof(struct Animal));
-            if(tipo == 'c' || tipo == 'C')
-                crearCarnivoro(&p);
-            else if(tipo == 'h' || tipo == 'H')
-                crearHerbivoro(&p);
-            else if(tipo == 'p' || tipo == 'P')
-                crearPlanta(&p);
-            
-            insert(&head,p);
-        }
-     }
-    printf("Datos leidos correctamente.\n");
-    fclose(entrada);
-    temp = head;
-    while(temp!=NULL)
-    {
-        tipo = temp->ptrAnimal->tipo;
-        if(tipo == 'c' || tipo == 'C')
-            printf("Carnivoro:%s\n",temp->ptrAnimal->pAnimalC->nombre);
-        else if(tipo == 'h' || tipo == 'H')
-            printf("Herbivoro:%s\n",temp->ptrAnimal->pAnimalH->nombre);
-        else if(tipo == 'p' || tipo == 'P')
-            printf("Planta:%s\n",temp->ptrAnimal->pPlanta->nombre);
-        temp=temp->next;
-    }
+    
+    WINDOW *my_win;
+	int startx, starty;
+	int ch;
+
+	initscr();			/* Start curses mode 		*/
+	cbreak();			/* Line buffering disabled, Pass on
+					 * everty thing to me 		*/
+    start_color();
+    use_default_colors();
+    init_pair(1, COLOR_GREEN, -1);
+	keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
+
+	starty = (LINES - HEIGHT) / 4;	/* Calculating for a center placement */
+	startx = (COLS - WIDTH) / 2;	/* of the window		*/
+	printw("Press F1 to exit");
+	refresh();
+	my_win = create_newwin(HEIGHT, WIDTH, starty, startx);
+	
+    struct Nodo *cList = NULL;
+    struct Nodo *hList = NULL;
+    struct Nodo *pList = NULL;
+    loadData(&cList,&hList,&pList);
+    struct Cell matrix[8][8];
+    initMatrix(matrix);
+    
+    //GAME LOOP
+    while((ch = getch()) != KEY_F(1))
+	{	
+	    switch(ch)
+		{	case KEY_LEFT:
+		        apply(matrix,&cList,&hList,&pList,'l');
+	            draw_matrix(my_win,matrix);
+               	wrefresh(my_win);
+				break;
+			case KEY_RIGHT:
+			    apply(matrix,&cList,&hList,&pList,'r');
+	            draw_matrix(my_win,matrix);
+	            wrefresh(my_win);
+				break;
+			case KEY_UP:
+			    apply(matrix,&cList,&hList,&pList,'u');
+	            draw_matrix(my_win,matrix);
+	            wrefresh(my_win);
+   				break;
+			case KEY_DOWN:
+			    apply(matrix,&cList,&hList,&pList,'d');
+	            draw_matrix(my_win,matrix);
+				break;
+		}
+	}
+		
+	endwin();			/* End curses mode		  */
+    
     return 0;
 }
