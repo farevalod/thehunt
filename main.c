@@ -74,6 +74,7 @@ int main()
 	                draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
 				break;
+		    default: draw_matrix(my_win,matrix,player);
 		}
 		if(player != NULL)
 		    draw_stats(stats, player);

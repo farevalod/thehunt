@@ -67,12 +67,13 @@ void draw_grass(WINDOW *local_win, int x, int y)
 
 void draw_welcome(WINDOW *main_win, WINDOW *msg_win, struct Animal **player)
 {
-    chooseAnimalMenu(main_win,player);
     wattron(msg_win,COLOR_PAIR(2));
     mvwprintw(msg_win,1, 1,"%s", "THE HUNT FOR LIFE");
     wattroff(msg_win,COLOR_PAIR(2));
     mvwprintw(msg_win,2, 1,"%s", "Iniciando simulacion de ecosistema...");
     wrefresh(msg_win);
+    chooseAnimalMenu(main_win,player);
+    return;
 }
 
 void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *player)
