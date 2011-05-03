@@ -18,28 +18,36 @@ int main()
     srand( time(NULL) );
     
     WINDOW *my_win;
+    WINDOW *stats;
+    WINDOW *msgs;
 	int startx, starty;
 	int ch;
 
 	initscr();			/* Start curses mode 		*/
-	cbreak();			/* Line buffering disabled, Pass on
-					 * everty thing to me 		*/
+	cbreak();			/* Line buffering disabled, Pass on */
+					    /* everty thing to me 		*/
     start_color();
     use_default_colors();
     init_pair(1, COLOR_GREEN, -1);
+    init_pair(2, COLOR_RED, -1);
 	keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
 
 	starty = (LINES - HEIGHT) / 4;	/* Calculating for a center placement */
 	startx = (COLS - WIDTH) / 2;	/* of the window		*/
-	printw("Press F1 to exit");
+	printw("Presione F1 para salir");
 	refresh();
 	my_win = create_newwin(HEIGHT, WIDTH, starty, startx);
+	stats = create_newwin(6,30,starty, startx+60);
+	msgs = create_newwin(6,80,starty+30,startx-13);
+	struct Animal *player;
+    player = (struct Animal *)malloc(sizeof(struct Animal));
+	draw_welcome(my_win,msgs,&player);
 	
-    struct Nodo *cList = NULL;
-    struct Nodo *hList = NULL;
-    struct Nodo *pList = NULL;
+    struct Nodo *cList = NULL;      //  ]
+    struct Nodo *hList = NULL;      //   -> Los animales leidos se guardan en éstas listas.
+    struct Nodo *pList = NULL;      //  ]
     loadData(&cList,&hList,&pList);
-    struct Cell matrix[8][8];
+    struct Cell matrix[9][9];
     initMatrix(matrix);
     
     //GAME LOOP
@@ -64,6 +72,7 @@ int main()
 			case KEY_DOWN:
 			    apply(matrix,&cList,&hList,&pList,'d');
 	            draw_matrix(my_win,matrix);
+	            wrefresh(my_win);
 				break;
 		}
 	}

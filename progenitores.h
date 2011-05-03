@@ -39,4 +39,9 @@ struct Planta
     int turnos;         //Las plantas más suculentas pueden alimentar por varios turnos.
 };
 
+void getDatosCarnivoro(char *name, int *hp, int *atk, int n);
+void crearCarnivoro(struct Animal **ptr);
+void getDatosHerbivoro(char *name, int *hp, int *def, int *mov, int n);
+void crearHerbivoro(struct Animal **ptr);
+
 #endif

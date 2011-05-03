@@ -1,11 +1,11 @@
 #include "Cell.h"
 #include "listaSeresVivos.h"
 
-int initMatrix(struct Cell matrix[8][8])
+int initMatrix(struct Cell matrix[9][9])
 {
     int i, j;
-    for(i=0;i<8;i++)
-        for(j=0;j<8;j++)
+    for(i=0;i<9;i++)
+        for(j=0;j<9;j++)
         {
             matrix[i][j].entidad = NULL;
             matrix[i][j].xpos = 1+i*3;
@@ -13,6 +13,7 @@ int initMatrix(struct Cell matrix[8][8])
         }
     return 0;
 }
+
 
 int delCell(struct Cell *c)
 {
@@ -45,7 +46,7 @@ int makeCell(struct Cell *c, struct Nodo **cList, struct Nodo **hList, struct No
 {
     struct Animal *temp;
     //ENTITY SPAWN PROBABILITY
-    int pC = 98, pH = 97, pP = 96;
+    int pC = 98, pH = 97, pP = 95;
     int roll = (rand()%100);
     
     if((roll > pC)? 1 : 0)
@@ -70,38 +71,40 @@ int makeCell(struct Cell *c, struct Nodo **cList, struct Nodo **hList, struct No
     return 0;
 }
 
-int apply(struct Cell matrix[8][8], struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir)
+int apply(struct Cell matrix[9][9], struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir)
 {
     int i, j;
             switch(dir)
             {
                 case 'r':
                 {
-                    for(i=0;i<8;i++)
+                    for(i=0;i<9;i++)
                     {
                         matrix[i][0].entidad = NULL;
                     }
-                    for(i=0;i<8;i++)
+                    for(i=0;i<9;i++)
                     {
-                        for(j=0;j<7;j++)
+                        for(j=0;j<8;j++)
                         {
-                            matrix[i][j].entidad = matrix[i][j+1].entidad;
+                            if((i != 4) && (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+                                matrix[i][j].entidad = matrix[i][j+1].entidad;
                         }
-                        makeCell(&matrix[i][7],cList,hList,pList);
+                        makeCell(&matrix[i][8],cList,hList,pList);
                     } 
                     break;
                 }
                 case 'l':
                 {
-                    for(i=0;i<8;i++)
+                    for(i=0;i<9;i++)
                     {
-                        matrix[i][7].entidad = NULL;
+                        matrix[i][8].entidad = NULL;
                     }
-                    for(i=0;i<8;i++)
+                    for(i=0;i<9;i++)
                     {
-                        for(j=7;j>0;j--)
+                        for(j=8;j>0;j--)
                         {
-                            matrix[i][j].entidad = matrix[i][j-1].entidad;
+                            if((i != 4) && (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+                                matrix[i][j].entidad = matrix[i][j-1].entidad;
                         }
                         makeCell(&matrix[i][0],cList,hList,pList);
                     }
@@ -110,15 +113,16 @@ int apply(struct Cell matrix[8][8], struct Nodo **cList, struct Nodo **hList, st
                 }
                 case 'u':
                 {
-                    for(j=0;j<8;j++)
+                    for(j=0;j<9;j++)
                     {
-                        matrix[7][j].entidad = NULL;
+                        matrix[8][j].entidad = NULL;
                     }
-                    for(j=0;j<8;j++)
+                    for(j=0;j<9;j++)
                     {
-                        for(i=7;i>0;i--)
+                        for(i=8;i>0;i--)
                         {
-                            matrix[i][j].entidad = matrix[i-1][j].entidad;
+                            if((i != 4) && (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+                                matrix[i][j].entidad = matrix[i-1][j].entidad;
                         }
                         makeCell(&matrix[0][j],cList,hList,pList);
                     }
@@ -126,17 +130,18 @@ int apply(struct Cell matrix[8][8], struct Nodo **cList, struct Nodo **hList, st
                 }
                 case 'd':
                 {
-                    for(j=0;j<8;j++)
+                    for(j=0;j<9;j++)
                     {
                         matrix[0][j].entidad = NULL;
                     }
-                    for(j=0;j<8;j++)
+                    for(j=0;j<9;j++)
                     {
-                        for(i=0;i<7;i++)
+                        for(i=0;i<8;i++)
                         {
-                            matrix[i][j].entidad = matrix[i+1][j].entidad;
+                            if((i != 4) && (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+                                matrix[i][j].entidad = matrix[i+1][j].entidad;
                         }
-                        makeCell(&matrix[7][j],cList,hList,pList);
+                        makeCell(&matrix[8][j],cList,hList,pList);
                     }
                     break;
                 }
