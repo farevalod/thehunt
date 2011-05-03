@@ -74,77 +74,109 @@ int makeCell(struct Cell *c, struct Nodo **cList, struct Nodo **hList, struct No
 int apply(struct Cell matrix[9][9], struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir)
 {
     int i, j;
-            switch(dir)
+    switch(dir)
+    {
+        case 'r':
+        {
+            if(matrix[4][5].entidad == NULL) //Si no hay entidad, mover.
             {
-                case 'r':
+                for(i=0;i<9;i++)
                 {
-                    for(i=0;i<9;i++)
-                    {
-                        matrix[i][0].entidad = NULL;
-                    }
-                    for(i=0;i<9;i++)
-                    {
-                        for(j=0;j<8;j++)
-                        {
-                            if((i != 4) && (j != 4)) //El animal del jugador (en 4,4) no se mueve.
-                                matrix[i][j].entidad = matrix[i][j+1].entidad;
-                        }
-                        makeCell(&matrix[i][8],cList,hList,pList);
-                    } 
-                    break;
+                    matrix[i][0].entidad = NULL;
                 }
-                case 'l':
+                for(i=0;i<9;i++)
                 {
-                    for(i=0;i<9;i++)
+                    for(j=0;j<8;j++)
                     {
-                        matrix[i][8].entidad = NULL;
+                        if((i != 4) || (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+                            matrix[i][j].entidad = matrix[i][j+1].entidad;
                     }
-                    for(i=0;i<9;i++)
-                    {
-                        for(j=8;j>0;j--)
-                        {
-                            if((i != 4) && (j != 4)) //El animal del jugador (en 4,4) no se mueve.
-                                matrix[i][j].entidad = matrix[i][j-1].entidad;
-                        }
-                        makeCell(&matrix[i][0],cList,hList,pList);
-                    }
-                    break;
-                    
-                }
-                case 'u':
-                {
-                    for(j=0;j<9;j++)
-                    {
-                        matrix[8][j].entidad = NULL;
-                    }
-                    for(j=0;j<9;j++)
-                    {
-                        for(i=8;i>0;i--)
-                        {
-                            if((i != 4) && (j != 4)) //El animal del jugador (en 4,4) no se mueve.
-                                matrix[i][j].entidad = matrix[i-1][j].entidad;
-                        }
-                        makeCell(&matrix[0][j],cList,hList,pList);
-                    }
-                    break;
-                }
-                case 'd':
-                {
-                    for(j=0;j<9;j++)
-                    {
-                        matrix[0][j].entidad = NULL;
-                    }
-                    for(j=0;j<9;j++)
-                    {
-                        for(i=0;i<8;i++)
-                        {
-                            if((i != 4) && (j != 4)) //El animal del jugador (en 4,4) no se mueve.
-                                matrix[i][j].entidad = matrix[i+1][j].entidad;
-                        }
-                        makeCell(&matrix[8][j],cList,hList,pList);
-                    }
-                    break;
-                }
+                    makeCell(&matrix[i][8],cList,hList,pList);
+                } 
+                return 0;
             }
-            return 0;
+            else
+            {
+                return 1;
+                //Atacar o comer lo que haya en m[4][5].
+            }
+        }
+        case 'l':
+        {
+            if(matrix[4][3].entidad == NULL) //Si no hay entidad, mover.
+            {
+                for(i=0;i<9;i++)
+                {
+                    matrix[i][8].entidad = NULL;
+                }
+                for(i=0;i<9;i++)
+                {
+                    for(j=8;j>0;j--)
+                    {
+                        if((i != 4) || (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+                            matrix[i][j].entidad = matrix[i][j-1].entidad;
+                    }
+                    makeCell(&matrix[i][0],cList,hList,pList);
+                }
+                return 0;
+            }
+            else
+            {
+                return 1;
+                //Atacar o comer.
+            }
+            
+        }
+        case 'u':
+        {
+            if(matrix[3][4].entidad == NULL) //Si no hay entidad, mover.
+            {
+                for(j=0;j<9;j++)
+                {
+                    matrix[8][j].entidad = NULL;
+                }
+                for(j=0;j<9;j++)
+                {
+                    for(i=8;i>0;i--)
+                    {
+                        if((i != 4) || (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+                            matrix[i][j].entidad = matrix[i-1][j].entidad;
+                    }
+                    makeCell(&matrix[0][j],cList,hList,pList);
+                }
+                return 0;
+            }
+            else
+            {
+                return 1;
+                //Atacar o comer.
+            }
+        }
+        case 'd':
+        {
+            if(matrix[5][4].entidad == NULL) //Si no hay entidad, mover.
+            {            
+                for(j=0;j<9;j++)
+                {
+                    matrix[0][j].entidad = NULL;
+                }
+                for(j=0;j<9;j++)
+                {
+                    for(i=0;i<8;i++)
+                    {
+                        if((i != 4) || (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+                            matrix[i][j].entidad = matrix[i+1][j].entidad;
+                    }
+                    makeCell(&matrix[8][j],cList,hList,pList);
+                }
+                return 0;
+            }
+            else
+            {
+                return 1;
+                //Atacar o comer.
+            }
+        }
+    }
+    return 0;
 }

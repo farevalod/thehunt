@@ -43,6 +43,17 @@ void getDatosHerbivoro(char *name, int *hp, int *def, int *mov, int n)
     }
 }
 
+void getHerbivoreName(struct Animal *p, char *buf)
+{
+    strcpy(buf,p->pAnimalH->nombre);
+    return;
+}
+
+int getHerbivoreHP(struct Animal *p)
+{
+    return p->pAnimalH->vida;
+}
+
 /******** Función: crearHerbivoro ********
 Descripcion: Crea un nuevo herbivoro al azar.
              Pide memoria, y carga los datos (via getDatosHerbivoro)
@@ -51,13 +62,18 @@ Parámetros: struct Animal **ptr: Puntero NULL donde se guardará la entidad.
 Retorno:    void. Modifica el punteros que recibe como arg.
 ************************************************/
 
-void crearHerbivoro(struct Animal **ptr)
+void crearHerbivoro(struct Animal **ptr, int n)
 {
     struct AnimalHerbivoro *paH = (struct AnimalHerbivoro *)malloc(sizeof(struct AnimalHerbivoro));
     *ptr = (struct Animal *)malloc(sizeof(struct Animal));
-    getDatosHerbivoro(paH->nombre,&(paH->vida),&(paH->defensa),&(paH->rand_mov),rand());
+    if( n == 0 )
+        getDatosHerbivoro(paH->nombre,&(paH->vida),&(paH->defensa),&(paH->rand_mov),rand());
+    else
+        getDatosHerbivoro(paH->nombre,&(paH->vida),&(paH->defensa),&(paH->rand_mov),n-1);
     paH->nro_comidas = 0;
     (*ptr)->tipo = 'h';
+    (*ptr)->getName = &getHerbivoreName;
+    (*ptr)->getHP = &getHerbivoreHP;  
     (*ptr)->pAnimalH = paH;   
     (*ptr)->pAnimalC = NULL;
     (*ptr)->pPlanta = NULL;

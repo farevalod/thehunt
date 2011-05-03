@@ -37,17 +37,20 @@ void chooseAnimalMenu(WINDOW *win, struct Animal **player)
     wrefresh(win);
     char ch = getch();
     int num = ch - '0'; //Se ve como un hack, pero el standard lo garantiza!
-    if(num < i)
+    if(num <= i)
     {
-        getDatosCarnivoro((*player)->pAnimalC->nombre,&((*player)->pAnimalC->vida),&((*player)->pAnimalC->ataque),num);
+        crearCarnivoro(player,num);
     }
     else
     {
         num = num - i;
-        getDatosHerbivoro((*player)->pAnimalH->nombre,&((*player)->pAnimalH->vida),&((*player)->pAnimalH->defensa),&((*player)->pAnimalH->rand_mov),num);
+        crearHerbivoro(player,num);
     }
-    mvwprintw(win,20,10,"%s","Animal seleccionado: ");
+    char name[20];
+    (*player)->getName(*player,name);
+    mvwprintw(win,20,10,"Animal seleccionado: %s",name);
     wrefresh(win);
+    getch();
     free(paC);
     free(paH);
     return;
@@ -72,7 +75,7 @@ void draw_welcome(WINDOW *main_win, WINDOW *msg_win, struct Animal **player)
     wrefresh(msg_win);
 }
 
-void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9])
+void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *player)
 {
     int i, j;
     int x, y;
@@ -83,6 +86,24 @@ void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9])
         {
             x = matrix[i][j].xpos;
             y = matrix[i][j].ypos;
+            if((i == 4) && (j == 4))
+            {
+                char name[20];
+                player->getName(player,name);
+                switch(player->tipo)
+                {
+                    case 'c':
+                        wattron(local_win,COLOR_PAIR(2));
+                        mvwprintw(local_win,x,y,"%c",name[0]);
+                        wattroff(local_win,COLOR_PAIR(2));
+                        continue;
+                    case 'h':
+                        wattron(local_win,COLOR_PAIR(1));
+                        mvwprintw(local_win,x,y,"%c",name[0]);
+                        wattroff(local_win,COLOR_PAIR(1));                        
+                        continue;
+                }
+            }
             if(matrix[i][j].entidad != NULL)
             {
                 ch = (matrix[i][j].entidad)->tipo;
@@ -92,15 +113,12 @@ void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9])
                 draw_grass(local_win,x,y);
         }
     }
-    
 }
 
-void draw_stats(WINDOW *stat_window, struct Animal player)
+void draw_stats(WINDOW *stat_window, struct Animal *player)
 {
-    if(player.tipo == 'c')
-        mvwprintw(stat_window,1,1,"HP: %d",player.pAnimalC->vida);
-    else
-        mvwprintw(stat_window,1,1,"HP: %d",player.pAnimalH->vida);
+    mvwprintw(stat_window,1,1,"HP: %d",player->getHP(player));
+    wrefresh(stat_window);
     return;
 }
 

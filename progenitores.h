@@ -7,8 +7,8 @@ Descripcion: Define Animal, AnimalCarnivoro, AnimalHerbivoro, y Planta
 #define PROGENITORES_H
 struct Animal
 {
-    void (*mostraratributos) (void *);
-    void (*ingresardato) (void  *);
+    void (*getName) (struct Animal *p, char *buf);
+    int (*getHP) (struct Animal *p);
     char tipo;    // ‘h’ o‘c’ (o 'p'!)
         struct AnimalCarnivoro * pAnimalC;
         struct AnimalHerbivoro * pAnimalH;
@@ -40,8 +40,8 @@ struct Planta
 };
 
 void getDatosCarnivoro(char *name, int *hp, int *atk, int n);
-void crearCarnivoro(struct Animal **ptr);
+void crearCarnivoro(struct Animal **ptr, int n);
 void getDatosHerbivoro(char *name, int *hp, int *def, int *mov, int n);
-void crearHerbivoro(struct Animal **ptr);
+void crearHerbivoro(struct Animal **ptr, int n);
 
 #endif

@@ -42,7 +42,7 @@ int main()
 	struct Animal *player;
     player = (struct Animal *)malloc(sizeof(struct Animal));
 	draw_welcome(my_win,msgs,&player);
-	
+	my_win = create_newwin(HEIGHT, WIDTH, starty, startx);
     struct Nodo *cList = NULL;      //  ]
     struct Nodo *hList = NULL;      //   -> Los animales leidos se guardan en éstas listas.
     struct Nodo *pList = NULL;      //  ]
@@ -55,26 +55,28 @@ int main()
 	{	
 	    switch(ch)
 		{	case KEY_LEFT:
-		        apply(matrix,&cList,&hList,&pList,'l');
-	            draw_matrix(my_win,matrix);
+		        if(apply(matrix,&cList,&hList,&pList,'l') == 0)
+	                draw_matrix(my_win,matrix,player);
                	wrefresh(my_win);
 				break;
 			case KEY_RIGHT:
-			    apply(matrix,&cList,&hList,&pList,'r');
-	            draw_matrix(my_win,matrix);
+			    if(apply(matrix,&cList,&hList,&pList,'r') == 0)
+    	            draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
 				break;
 			case KEY_UP:
-			    apply(matrix,&cList,&hList,&pList,'u');
-	            draw_matrix(my_win,matrix);
+			    if(apply(matrix,&cList,&hList,&pList,'u') == 0)
+	                draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
    				break;
 			case KEY_DOWN:
-			    apply(matrix,&cList,&hList,&pList,'d');
-	            draw_matrix(my_win,matrix);
+			    if(apply(matrix,&cList,&hList,&pList,'d') == 0)
+	                draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
 				break;
 		}
+		if(player != NULL)
+		    draw_stats(stats, player);
 	}
 		
 	endwin();			/* End curses mode		  */

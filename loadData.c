@@ -31,12 +31,12 @@ int loadData(struct Nodo **cList, struct Nodo **hList, struct Nodo **pList)
             p = (struct Animal *)malloc(sizeof(struct Animal));
             if(tipo == 'c' || tipo == 'C')
             {
-                crearCarnivoro(&p);
+                crearCarnivoro(&p,0);
                 insert(cList,p);
             }
             else if(tipo == 'h' || tipo == 'H')
             {
-                crearHerbivoro(&p);
+                crearHerbivoro(&p,0);
                 insert(hList,p);
             }
             else if(tipo == 'p' || tipo == 'P')
