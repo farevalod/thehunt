@@ -1,8 +1,13 @@
 THE HUNT FOR LIFE
 
 Instrucciones: 
-1. Descargar e instalar ncurses	
-	ftp://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+1. Descargar e instalar ncurses
+
+    #apt-get install libncurses5-dev
+    
+    O en su defecto:
+    
+	ftp://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz	
 	tar zxvf ncurses-5.9.tar.gz
 	cd ncurses-5.9        
 	./configure  

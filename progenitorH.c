@@ -54,6 +54,15 @@ int getHerbivoreHP(struct Animal *p)
     return p->pAnimalH->vida;
 }
 
+int hitHHP(struct Animal *p, int amount)
+{
+    p->pAnimalH->vida -= amount;
+    if(p->pAnimalH->vida < 0)
+        return 1;
+    else
+        return 0;
+}
+
 /******** Función: crearHerbivoro ********
 Descripcion: Crea un nuevo herbivoro al azar.
              Pide memoria, y carga los datos (via getDatosHerbivoro)
@@ -73,7 +82,8 @@ void crearHerbivoro(struct Animal **ptr, int n)
     paH->nro_comidas = 0;
     (*ptr)->tipo = 'h';
     (*ptr)->getName = &getHerbivoreName;
-    (*ptr)->getHP = &getHerbivoreHP;  
+    (*ptr)->getHP = &getHerbivoreHP;
+    (*ptr)->hitHP = &hitHHP;
     (*ptr)->pAnimalH = paH;   
     (*ptr)->pAnimalC = NULL;
     (*ptr)->pPlanta = NULL;

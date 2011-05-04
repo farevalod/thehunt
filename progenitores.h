@@ -9,7 +9,8 @@ struct Animal
 {
     void (*getName) (struct Animal *p, char *buf);
     int (*getHP) (struct Animal *p);
-    char tipo;    // ‘h’ o‘c’ (o 'p'!)
+    int (*hitHP) (struct Animal *p, int amount);
+    char tipo;    // ‘h’ o‘c’ (o 'p'!) (o 'x'! [cadaver])
         struct AnimalCarnivoro * pAnimalC;
         struct AnimalHerbivoro * pAnimalH;
         struct Planta *pPlanta;

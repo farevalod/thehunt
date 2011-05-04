@@ -1,5 +1,6 @@
 #include "Cell.h"
 #include "listaSeresVivos.h"
+#include "AI.c"
 
 int initMatrix(struct Cell matrix[9][9])
 {
@@ -68,6 +69,32 @@ int makeCell(struct Cell *c, struct Nodo **cList, struct Nodo **hList, struct No
         return 1;
     }
     c->entidad = NULL;
+    return 0;
+}
+
+int iterateMatrix(struct Cell matrix[9][9], struct Animal *player)
+{
+    int i, j;
+    char type;
+    for(i=0;i<9;i++)
+    {
+        for(j=0;j<9;j++)
+        {
+            if( (i != 4) || (j != 4) )
+            {
+                if(matrix[i][j].entidad != NULL)
+                    type = matrix[i][j].entidad->tipo;
+                if(matrix[i][j].entidad->getHP < 0)
+                    matrix[i][j].entidad->tipo = 'x'; //Chao animal.
+                if(type == 'c')
+                    carnivoreAI(matrix,i,j,player);
+                if(type == 'h')
+                    herbivoreAI(matrix,i,j,player);
+                else
+                    type = '0';
+            }
+        }
+    }
     return 0;
 }
 

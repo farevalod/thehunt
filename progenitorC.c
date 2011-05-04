@@ -50,6 +50,16 @@ int getCarnivoreHP(struct Animal *p)
     return p->pAnimalC->vida;
 }
 
+int hitCHP(struct Animal *p, int amount)
+{
+    p->pAnimalC->vida -= amount;
+    if(p->pAnimalC->vida < 0)
+        return 1;
+    else
+        return 0;
+}
+
+
 /******** Función: crearCarnivoro ********
 Descripcion: Crea un nuevo carnívoro al azar.
              Pide memoria, y carga los datos (via getDatosCarnivoro)
@@ -70,6 +80,7 @@ void crearCarnivoro(struct Animal **ptr,int n)
     (*ptr)->tipo = 'c';
     (*ptr)->getName = &getCarnivoreName;
     (*ptr)->getHP = &getCarnivoreHP;
+    (*ptr)->hitHP = &hitCHP;
     (*ptr)->pAnimalC = paC;
     (*ptr)->pAnimalH = NULL;
     (*ptr)->pPlanta = NULL;

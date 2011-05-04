@@ -35,7 +35,8 @@ void chooseAnimalMenu(WINDOW *win, struct Animal **player)
     }
     mvwprintw(win,15,10,"%s","Seleccione el animal a utilizar: ");
     wrefresh(win);
-    char ch = getch();
+    char ch;
+    while(((ch = getch()) < '1') || ch > '9');
     int num = ch - '0'; //Se ve como un hack, pero el standard lo garantiza!
     if(num <= i)
     {
@@ -75,6 +76,7 @@ void draw_welcome(WINDOW *main_win, WINDOW *msg_win, struct Animal **player)
     chooseAnimalMenu(main_win,player);
     return;
 }
+
 
 void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *player)
 {
@@ -118,7 +120,7 @@ void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *pla
 
 void draw_stats(WINDOW *stat_window, struct Animal *player)
 {
-    mvwprintw(stat_window,1,1,"HP: %d",player->getHP(player));
+    mvwprintw(stat_window,1,1,"HP: %d  ",player->getHP(player));
     wrefresh(stat_window);
     return;
 }
