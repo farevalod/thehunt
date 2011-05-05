@@ -18,7 +18,7 @@ Parámetros:
 Retorno:    void. Modifica los punteros que recibe como args.
 ************************************************/
 
-void getDatosPlanta(char *name, int *trn, int n)
+void getDatosPlanta(char *name, int n)
 {
     FILE *plantData = fopen("plants.txt","r");
     if(plantData == NULL)
@@ -35,7 +35,6 @@ void getDatosPlanta(char *name, int *trn, int n)
     for(i=0;i<n;i++)
     {
         fscanf(plantData,"%s",name);
-        fscanf(plantData,"%d",trn);
     }
 }
 
@@ -51,7 +50,7 @@ void crearPlanta(struct Animal **ptr)
 {
     struct Planta *paP = (struct Planta *)malloc(sizeof(struct Planta));
     *ptr = (struct Animal *)malloc(sizeof(struct Animal));
-    getDatosPlanta(paP->nombre,&(paP->turnos),rand());
+    getDatosPlanta(paP->nombre,rand());
     (*ptr)->tipo = 'p';
     (*ptr)->pPlanta = paP;   
     (*ptr)->pAnimalC = NULL;

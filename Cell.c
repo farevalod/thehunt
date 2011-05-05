@@ -2,6 +2,8 @@
 #include "listaSeresVivos.h"
 #include "AI.c"
 
+extern WINDOW *msgs;
+
 int initMatrix(struct Cell matrix[9][9])
 {
     int i, j;
@@ -12,34 +14,6 @@ int initMatrix(struct Cell matrix[9][9])
             matrix[i][j].xpos = 1+i*3;
             matrix[i][j].ypos = 3+j*6;
         }
-    return 0;
-}
-
-
-int delCell(struct Cell *c)
-{
-    if(c->entidad != NULL)
-    {
-        switch(c->entidad->tipo)
-        {
-            case 'c':
-            {
-                free(c->entidad->pAnimalC);
-                break;
-            }
-            case 'h':
-            {
-                free(c->entidad->pAnimalH);
-                break;
-            }
-            case 'p':
-            {
-                free(c->entidad->pPlanta);
-                break;
-            }
-        }
-    }
-    free(c->entidad);
     return 0;
 }
 
@@ -80,25 +54,39 @@ int iterateMatrix(struct Cell matrix[9][9], struct Animal *player)
     {
         for(j=0;j<9;j++)
         {
+            if((matrix[i][j].entidad == NULL) || (matrix[i][j].entidad->tipo == 'p'))
+                continue;
             if( (i != 4) || (j != 4) )
             {
-                if(matrix[i][j].entidad != NULL)
-                    type = matrix[i][j].entidad->tipo;
-                if(matrix[i][j].entidad->getHP < 0)
-                    matrix[i][j].entidad->tipo = 'x'; //Chao animal.
+                type = matrix[i][j].entidad->tipo;
                 if(type == 'c')
-                    carnivoreAI(matrix,i,j,player);
+                {
+                    if(matrix[i][j].entidad->getHP(matrix[i][j].entidad) < 1)
+                    {
+                        matrix[i][j].entidad->die(matrix[i][j].entidad);    //Chao animal.
+                    }
+                    else
+                        carnivoreAI(matrix,i,j,player);
+                }
                 if(type == 'h')
-                    herbivoreAI(matrix,i,j,player);
-                else
-                    type = '0';
+                {
+                    if(matrix[i][j].entidad->getHP(matrix[i][j].entidad) < 1)
+                    {
+                        matrix[i][j].entidad->die(matrix[i][j].entidad);    //Chao animal.
+                    }
+                    else
+                        herbivoreAI(matrix,i,j,player);
+                }
+                if(type == 'x')
+                    if(matrix[i][j].entidad->eat(matrix[i][j].entidad,0) < 0)
+                        matrix[i][j].entidad = NULL;
             }
         }
     }
     return 0;
 }
 
-int apply(struct Cell matrix[9][9], struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir)
+int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir)
 {
     int i, j;
     switch(dir)
@@ -122,10 +110,52 @@ int apply(struct Cell matrix[9][9], struct Nodo **cList, struct Nodo **hList, st
                 } 
                 return 0;
             }
-            else
+            else                    //SI HAY ALGO EN LA CELDA...
             {
-                return 1;
-                //Atacar o comer lo que haya en m[4][5].
+                if(player->tipo == 'c')//Si el player es carnivoro...
+                {                      //y hay un animal vivo...
+                    if((matrix[4][5].entidad->tipo != 'x') && (matrix[4][5].entidad->tipo != 'p'))  
+                    {                  //ATACAR
+                        int dmg = (rand() % 12) * player->pAnimalC->ataque;
+                        matrix[4][5].entidad->hitHP(matrix[4][5].entidad,dmg);
+                        if(dmg > 0)
+                            mvwprintw(msgs,2, 1,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                        else
+                            mvwprintw(msgs,2, 1,"El animal esquiva tu intento de atacarlo.");
+                        wrefresh(msgs);
+                    }                  //Si no, comer:
+                    else if(matrix[4][5].entidad->tipo == 'x') //Alimentarse de un cadaver.
+                    {
+                        int heal = (rand()%20);
+                        player->hitHP(player,-heal);
+                        matrix[4][5].entidad->eat(matrix[4][5].entidad,-1);
+                        wattron(msgs,COLOR_PAIR(1));
+                        mvwprintw(msgs,2, 1,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
+                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        wattroff(msgs,COLOR_PAIR(1));
+                        wrefresh(msgs);
+                        player->eat(player,1);
+                    }
+                    return 1;
+                    //Si es una planta, retornar.
+                }
+                if(player->tipo == 'h')
+                {
+                    if(matrix[4][5].entidad->tipo == 'p') //Alimentarse de una planta.
+                    {
+                        int heal = (rand()%20);
+                        player->hitHP(player,-heal);
+                        wattron(msgs,COLOR_PAIR(1));
+                        mvwprintw(msgs,2, 1,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[4][5].entidad->pPlanta->nombre,heal);
+                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        wattroff(msgs,COLOR_PAIR(1));
+                        wrefresh(msgs);
+                        matrix[4][5].entidad = NULL;
+                        player->eat(player,1);
+                    }
+                    return 0;
+                }
+                
             }
         }
         case 'l':
@@ -147,10 +177,51 @@ int apply(struct Cell matrix[9][9], struct Nodo **cList, struct Nodo **hList, st
                 }
                 return 0;
             }
-            else
+            else                    //SI HAY ALGO EN LA CELDA...
             {
-                return 1;
-                //Atacar o comer.
+                if(player->tipo == 'c')//Si el player es carnivoro...
+                {                      //y hay un animal vivo...
+                    if((matrix[4][3].entidad->tipo != 'x') && (matrix[4][3].entidad->tipo != 'p'))  
+                    {                  //ATACAR
+                        int dmg = (rand() % 12) * player->pAnimalC->ataque;
+                        matrix[4][3].entidad->hitHP(matrix[4][3].entidad,dmg);
+                        if(dmg > 0)
+                            mvwprintw(msgs,2, 1,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                        else
+                            mvwprintw(msgs,2, 1,"El animal esquiva tu intento de atacarlo.");
+                        wrefresh(msgs);
+                    }                  //Si no, comer:
+                    else if(matrix[4][3].entidad->tipo == 'x') //Alimentarse de un cadaver.
+                    {
+                        int heal = (rand()%20);
+                        player->hitHP(player,-heal);
+                        matrix[4][3].entidad->eat(matrix[4][3].entidad,-1);
+                        wattron(msgs,COLOR_PAIR(1));
+                        mvwprintw(msgs,2, 1,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
+                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        wattroff(msgs,COLOR_PAIR(1));
+                        wrefresh(msgs);
+                        player->eat(player,1);
+                    }
+                    return 1;
+                    //Si es una planta, retornar.
+                }
+            }
+            if(player->tipo == 'h')
+            {
+                if(matrix[4][3].entidad->tipo == 'p') //Alimentarse de una planta.
+                {
+                    int heal = (rand()%20);
+                    player->hitHP(player,-heal);
+                    wattron(msgs,COLOR_PAIR(1));
+                    mvwprintw(msgs,2, 1,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[4][3].entidad->pPlanta->nombre,heal);
+                    mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                    wattroff(msgs,COLOR_PAIR(1));
+                    wrefresh(msgs);
+                    matrix[4][3].entidad = NULL;
+                    player->eat(player,1);
+                }
+                return 0;
             }
             
         }
@@ -173,10 +244,51 @@ int apply(struct Cell matrix[9][9], struct Nodo **cList, struct Nodo **hList, st
                 }
                 return 0;
             }
-            else
+            else                    //SI HAY ALGO EN LA CELDA...
             {
-                return 1;
-                //Atacar o comer.
+                if(player->tipo == 'c')//Si el player es carnivoro...
+                {                      //y hay un animal vivo...
+                    if((matrix[3][4].entidad->tipo != 'x') && (matrix[3][4].entidad->tipo != 'p'))  
+                    {                  //ATACAR
+                        int dmg = (rand() % 12) * player->pAnimalC->ataque;
+                        matrix[3][4].entidad->hitHP(matrix[3][4].entidad,dmg);
+                        if(dmg > 0)
+                            mvwprintw(msgs,2, 1,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                        else
+                            mvwprintw(msgs,2, 1,"El animal esquiva tu intento de atacarlo.");
+                        wrefresh(msgs);
+                    }                  //Si no, comer:
+                    else if(matrix[3][4].entidad->tipo == 'x') //Alimentarse de un cadaver.
+                    {
+                        int heal = (rand()%20);
+                        player->hitHP(player,-heal);
+                        matrix[3][4].entidad->eat(matrix[3][4].entidad,-1);
+                        wattron(msgs,COLOR_PAIR(1));
+                        mvwprintw(msgs,2, 1,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
+                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        wattroff(msgs,COLOR_PAIR(1));
+                        wrefresh(msgs);
+                        player->eat(player,1);
+                    }
+                    return 1;
+                    //Si es una planta, retornar.
+                }
+            }
+            if(player->tipo == 'h')
+            {
+                if(matrix[3][4].entidad->tipo == 'p') //Alimentarse de una planta.
+                {
+                    int heal = (rand()%20);
+                    player->hitHP(player,-heal);
+                    wattron(msgs,COLOR_PAIR(1));
+                    mvwprintw(msgs,2, 1,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[3][4].entidad->pPlanta->nombre,heal);
+                    mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                    wattroff(msgs,COLOR_PAIR(1));
+                    wrefresh(msgs);
+                    matrix[3][4].entidad = NULL;
+                    player->eat(player,1);
+                }
+                return 0;
             }
         }
         case 'd':
@@ -198,10 +310,51 @@ int apply(struct Cell matrix[9][9], struct Nodo **cList, struct Nodo **hList, st
                 }
                 return 0;
             }
-            else
+                        else                    //SI HAY ALGO EN LA CELDA...
             {
-                return 1;
-                //Atacar o comer.
+                if(player->tipo == 'c')//Si el player es carnivoro...
+                {                      //y hay un animal vivo...
+                    if((matrix[5][4].entidad->tipo != 'x') && (matrix[5][4].entidad->tipo != 'p'))  
+                    {                  //ATACAR
+                        int dmg = (rand() % 12) * player->pAnimalC->ataque;
+                        matrix[5][4].entidad->hitHP(matrix[5][4].entidad,dmg);
+                        if(dmg > 0)
+                            mvwprintw(msgs,2, 1,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                        else
+                            mvwprintw(msgs,2, 1,"El animal esquiva tu intento de atacarlo.");
+                        wrefresh(msgs);
+                    }                  //Si no, comer:
+                    else if(matrix[5][4].entidad->tipo == 'x') //Alimentarse de un cadaver.
+                    {
+                        int heal = (rand()%20);
+                        player->hitHP(player,-heal);
+                        matrix[5][4].entidad->eat(matrix[5][4].entidad,-1);
+                        wattron(msgs,COLOR_PAIR(1));
+                        mvwprintw(msgs,2, 1,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
+                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        wattroff(msgs,COLOR_PAIR(1));
+                        wrefresh(msgs);
+                        player->eat(player,1);
+                    }
+                    return 1;
+                    //Si es una planta, retornar.
+                }
+            }
+            if(player->tipo == 'h')
+            {
+                if(matrix[5][4].entidad->tipo == 'p') //Alimentarse de una planta.
+                {
+                    int heal = (rand()%20);
+                    player->hitHP(player,-heal);
+                    wattron(msgs,COLOR_PAIR(1));
+                    mvwprintw(msgs,2, 1,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[5][4].entidad->pPlanta->nombre,heal);
+                    mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                    wattroff(msgs,COLOR_PAIR(1));
+                    wrefresh(msgs);
+                    matrix[5][4].entidad = NULL;
+                    player->eat(player,1);
+                }
+                return 0;
             }
         }
     }

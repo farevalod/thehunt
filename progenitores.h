@@ -10,6 +10,8 @@ struct Animal
     void (*getName) (struct Animal *p, char *buf);
     int (*getHP) (struct Animal *p);
     int (*hitHP) (struct Animal *p, int amount);
+    int (*eat)   (struct Animal *p, int inc);
+    int (*die)  (struct Animal *p);
     char tipo;    // ‘h’ o‘c’ (o 'p'!) (o 'x'! [cadaver])
         struct AnimalCarnivoro * pAnimalC;
         struct AnimalHerbivoro * pAnimalH;
@@ -37,7 +39,6 @@ struct AnimalHerbivoro
 struct Planta
 {                       //La estructura planta permite darle un poco más de personalidad
     char nombre[20];    //a distintas plantas en el juego.
-    int turnos;         //Las plantas más suculentas pueden alimentar por varios turnos.
 };
 
 void getDatosCarnivoro(char *name, int *hp, int *atk, int n);

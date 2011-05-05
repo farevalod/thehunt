@@ -1,13 +1,7 @@
 6
-Arroz
-1
 Papa
-2
 Manzana
-2
 Pera
-2
 Naranja
-2
-Platano
-2
+Raiz
+Zanahoria

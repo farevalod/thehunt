@@ -71,17 +71,19 @@ void draw_welcome(WINDOW *main_win, WINDOW *msg_win, struct Animal **player)
     wattron(msg_win,COLOR_PAIR(2));
     mvwprintw(msg_win,1, 1,"%s", "THE HUNT FOR LIFE");
     wattroff(msg_win,COLOR_PAIR(2));
-    mvwprintw(msg_win,2, 1,"%s", "Iniciando simulacion de ecosistema...");
+    mvwprintw(msg_win,2, 1,"Iniciando simulacion de ecosistema...");
     wrefresh(msg_win);
+    mvwprintw(msg_win,3, 1,"Duracion del juego: 20 comidas.");
     chooseAnimalMenu(main_win,player);
+    mvwprintw(msg_win,3, 1,"                               ");
     return;
 }
 
 
 void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *player)
 {
-    int i, j;
-    int x, y;
+    int i, j;           //Contadores de loop
+    int x, y;           //Coordenadas
     char ch;
     for(i=0;i<9;i++)
     {
@@ -110,7 +112,29 @@ void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *pla
             if(matrix[i][j].entidad != NULL)
             {
                 ch = (matrix[i][j].entidad)->tipo;
-                mvwprintw(local_win,x, y,"%c",ch);
+                switch(ch)
+                {
+                    case('c'):
+                        wattron(local_win,COLOR_PAIR(2));
+                        mvwprintw(local_win,x,y,"%c",ch);
+                        wattroff(local_win,COLOR_PAIR(2));
+                        break;
+                    case('h'):
+                        wattron(local_win,COLOR_PAIR(4));
+                        mvwprintw(local_win,x,y,"%c",ch);
+                        wattroff(local_win,COLOR_PAIR(4));
+                        break;
+                    case('p'):
+                        wattron(local_win,COLOR_PAIR(1));
+                        mvwprintw(local_win,x,y,"%c",ch);
+                        wattroff(local_win,COLOR_PAIR(1));
+                        break;
+                    case 'x':
+                        wattron(local_win,COLOR_PAIR(3));
+                        mvwprintw(local_win,x,y,"x");
+                        wattroff(local_win,COLOR_PAIR(3));
+                        continue;                        
+                }                                               
             }
             else
                 draw_grass(local_win,x,y);

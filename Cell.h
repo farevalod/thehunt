@@ -13,6 +13,6 @@ struct Cell
 int initMatrix(struct Cell matrix[9][9]);
 int delCell(struct Cell *c);
 int makeCell(struct Cell *c, struct Nodo **cList, struct Nodo **hList, struct Nodo **pList);
-int apply(struct Cell matrix[9][9], struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir);
+int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir);
 
 #endif

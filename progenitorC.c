@@ -45,6 +45,22 @@ void getCarnivoreName(struct Animal *p, char *buf)
     return;
 }
 
+int eatC(struct Animal *p,int inc)
+{
+    if(inc == 1)
+        p->pAnimalC->nro_comidas++;
+    if(inc == -1)
+        p->pAnimalC->nro_comidas--;
+    return p->pAnimalC->nro_comidas;
+}
+
+int dieC(struct Animal *p)
+{
+    p->tipo = 'x';
+    p->pAnimalC->nro_comidas = 3;
+    return 0;
+}
+
 int getCarnivoreHP(struct Animal *p)
 {
     return p->pAnimalC->vida;
@@ -81,6 +97,8 @@ void crearCarnivoro(struct Animal **ptr,int n)
     (*ptr)->getName = &getCarnivoreName;
     (*ptr)->getHP = &getCarnivoreHP;
     (*ptr)->hitHP = &hitCHP;
+    (*ptr)->eat = &eatC;
+    (*ptr)->die = &dieC;
     (*ptr)->pAnimalC = paC;
     (*ptr)->pAnimalH = NULL;
     (*ptr)->pPlanta = NULL;

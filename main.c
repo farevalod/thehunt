@@ -15,6 +15,10 @@ Funciones:
 #include "loadData.c"
 #include "ncurses.h"
 
+    WINDOW *my_win;
+    WINDOW *stats;
+    WINDOW *msgs;
+
 int nonCanonical()
 {
     struct termios termios_p;
@@ -39,9 +43,6 @@ int main()
     struct termios defs;    //Se guarda el estado actual de termios.
     tcgetattr(0,&defs);     //No queremos contaminar el tty del usuario
                             //(Asi es, el tty, no solo el proceso!)                          
-    WINDOW *my_win;
-    WINDOW *stats;
-    WINDOW *msgs;
 	int startx, starty;
 
 	initscr();			/* Start curses mode 		*/
@@ -52,6 +53,7 @@ int main()
     init_pair(1, COLOR_GREEN, -1);
     init_pair(2, COLOR_RED, -1);
     init_pair(3, COLOR_YELLOW, COLOR_RED);
+    init_pair(4, COLOR_YELLOW,-1);
 	keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
 
 	starty = (LINES - HEIGHT) / 4;	/* Calculating for a center placement */
@@ -90,22 +92,22 @@ int main()
     	i++;
 	    switch(ch)
 		{	case 'a':
-		        if(apply(matrix,&cList,&hList,&pList,'l') == 0)
+		        if(apply(matrix,player,&cList,&hList,&pList,'l') == 0)
 	                draw_matrix(my_win,matrix,player);
                	wrefresh(my_win);
 				break;
 			case 'd':
-			    if(apply(matrix,&cList,&hList,&pList,'r') == 0)
+			    if(apply(matrix,player,&cList,&hList,&pList,'r') == 0)
     	            draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
 				break;
 			case 'w':
-			    if(apply(matrix,&cList,&hList,&pList,'u') == 0)
+			    if(apply(matrix,player,&cList,&hList,&pList,'u') == 0)
 	                draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
    				break;
 			case 's':
-			    if(apply(matrix,&cList,&hList,&pList,'d') == 0)
+			    if(apply(matrix,player,&cList,&hList,&pList,'d') == 0)
 	                draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
 				break;
@@ -114,9 +116,18 @@ int main()
 		        break;
 		    default: draw_matrix(my_win,matrix,player);
 		}
+		if(player->eat(player,0) > 10)
+		{
+		    mvwprintw(msgs,2, 1,"%s", "Limite de comidas alcanzado! Felicitaciones!           ");
+            mvwprintw(msgs,3, 1,"%s", "                                                       ");
+            wrefresh(msgs);            
+		    canonical(&defs);
+            getch();
+		    end = 1;
+		}
 		if(player != NULL)
 		    draw_stats(stats, player);
-		if(player->getHP(player) < 0)
+		if(player->getHP(player) < 1)
 		{
             wattron(my_win,COLOR_PAIR(3));
             for(i=-1;i<2;i++)
@@ -126,6 +137,7 @@ int main()
             wattroff(my_win,COLOR_PAIR(3));
             wrefresh(my_win);
             mvwprintw(msgs,2, 1,"%s", "Has sido devorado...                                   ");
+            mvwprintw(msgs,3, 1,"%s", "                                                       ");
             wrefresh(msgs);
             end = 1;
             canonical(&defs);
