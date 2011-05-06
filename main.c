@@ -18,6 +18,7 @@ Funciones:
     WINDOW *my_win;
     WINDOW *stats;
     WINDOW *msgs;
+  	char msg_buffer[5][55]; //Buffer de mensajes.
 
 int nonCanonical()
 {
@@ -71,7 +72,7 @@ int main()
 	refresh();
 	my_win = create_newwin(HEIGHT, WIDTH, starty, startx);
 	stats = create_newwin(6,30,starty, startx+60);
-	msgs = create_newwin(6,80,starty+30,startx-13);
+	msgs = create_newwin(9,80,starty+30,startx-13);
 	struct Animal *player;
     player = (struct Animal *)malloc(sizeof(struct Animal));
 	draw_welcome(my_win,msgs,&player);
@@ -125,17 +126,17 @@ int main()
 		        break;
 		    default: draw_matrix(my_win,matrix,player);
 		}
-		if(player->eat(player,0) > lim)
+		if(player->eat(player,0) >= lim)
 		{
-		    mvwprintw(msgs,2, 1,"%s", "Limite de comidas alcanzado! Felicitaciones!           ");
-            mvwprintw(msgs,3, 1,"%s", "                                                       ");
-            wrefresh(msgs);            
+		    draw_msg("Limite de comidas alcanzado! Felicitaciones!",msg_buffer);
+            draw_msg("                                            ",msg_buffer);
+            draw_msg("                                            ",msg_buffer);
 		    canonical(&defs);
             getch();
 		    end = 1;
 		}
 		if(player != NULL)
-		    draw_stats(stats, player);
+		    draw_stats(stats, player, lim);
 		if(player->getHP(player) < 1)
 		{
             wattron(my_win,COLOR_PAIR(3));
@@ -145,9 +146,9 @@ int main()
             mvwprintw(my_win,px,py,"X");
             wattroff(my_win,COLOR_PAIR(3));
             wrefresh(my_win);
-            mvwprintw(msgs,2, 1,"%s", "Has sido devorado...                                   ");
-            mvwprintw(msgs,3, 1,"%s", "                                                       ");
-            wrefresh(msgs);
+            draw_msg("Has sido devorado...                      ",msg_buffer);
+            draw_msg("                                          ",msg_buffer);
+            draw_msg("                                          ",msg_buffer);
             end = 1;
             canonical(&defs);
             getch();

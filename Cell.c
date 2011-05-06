@@ -3,6 +3,7 @@
 #include "AI.c"
 
 extern WINDOW *msgs;
+extern char msg_buffer[5][55];
 
 int initMatrix(struct Cell matrix[9][9])        //Se inicializan las coordenadas en pantalla
 {                                               //para cada celda.
@@ -110,6 +111,7 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
         de ataque y alimentación.
     */
     int i, j;
+    char msg_string[55];
     switch(dir)
     {
         case 'r':
@@ -137,13 +139,15 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                 {                      //y hay un animal vivo...
                     if((matrix[4][5].entidad->tipo != 'x') && (matrix[4][5].entidad->tipo != 'p'))  
                     {                  //ATACAR
-                        int dmg = (rand() % 12) * player->pAnimalC->ataque;
+                        int dmg = (rand() % 9) * player->pAnimalC->ataque;
                         matrix[4][5].entidad->hitHP(matrix[4][5].entidad,dmg);
                         if(dmg > 0)
-                            mvwprintw(msgs,2, 1,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                        {
+                            sprintf(msg_string,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                            draw_msg(msg_string,msg_buffer);
+                        }
                         else
-                            mvwprintw(msgs,2, 1,"El animal esquiva tu intento de atacarlo.");
-                        wrefresh(msgs);
+                            draw_msg("El animal esquiva tu intento de atacarlo.",msg_buffer);
                     }                  //Si no, comer:
                     else if(matrix[4][5].entidad->tipo == 'x') //Alimentarse de un cadaver.
                     {
@@ -151,10 +155,9 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                         player->hitHP(player,-heal);
                         matrix[4][5].entidad->eat(matrix[4][5].entidad,-1);
                         wattron(msgs,COLOR_PAIR(1));
-                        mvwprintw(msgs,2, 1,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
-                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        sprintf(msg_string,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
+                        draw_msg(msg_string,msg_buffer);
                         wattroff(msgs,COLOR_PAIR(1));
-                        wrefresh(msgs);
                         player->eat(player,1);
                     }
                     return 1;
@@ -167,10 +170,9 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                         int heal = (rand()%20);
                         player->hitHP(player,-heal);
                         wattron(msgs,COLOR_PAIR(1));
-                        mvwprintw(msgs,2, 1,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[4][5].entidad->pPlanta->nombre,heal);
-                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        sprintf(msg_string,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[4][5].entidad->pPlanta->nombre,heal);
+                        draw_msg(msg_string,msg_buffer);
                         wattroff(msgs,COLOR_PAIR(1));
-                        wrefresh(msgs);
                         matrix[4][5].entidad = NULL;
                         player->eat(player,1);
                     }
@@ -207,9 +209,12 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                         int dmg = (rand() % 12) * player->pAnimalC->ataque;
                         matrix[4][3].entidad->hitHP(matrix[4][3].entidad,dmg);
                         if(dmg > 0)
-                            mvwprintw(msgs,2, 1,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                        {
+                            sprintf(msg_string,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                            draw_msg(msg_string,msg_buffer);
+                        }
                         else
-                            mvwprintw(msgs,2, 1,"El animal esquiva tu intento de atacarlo.");
+                            draw_msg("El animal esquiva tu intento de atacarlo.",msg_buffer);
                         wrefresh(msgs);
                     }                  //Si no, comer:
                     else if(matrix[4][3].entidad->tipo == 'x') //Alimentarse de un cadaver.
@@ -218,10 +223,9 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                         player->hitHP(player,-heal);
                         matrix[4][3].entidad->eat(matrix[4][3].entidad,-1);
                         wattron(msgs,COLOR_PAIR(1));
-                        mvwprintw(msgs,2, 1,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
-                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        sprintf(msg_string,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
+                        draw_msg(msg_string,msg_buffer);
                         wattroff(msgs,COLOR_PAIR(1));
-                        wrefresh(msgs);
                         player->eat(player,1);
                     }
                     return 1;
@@ -235,10 +239,9 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                     int heal = (rand()%20);
                     player->hitHP(player,-heal);
                     wattron(msgs,COLOR_PAIR(1));
-                    mvwprintw(msgs,2, 1,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[4][3].entidad->pPlanta->nombre,heal);
-                    mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                    sprintf(msg_string,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[4][3].entidad->pPlanta->nombre,heal);
+                    draw_msg(msg_string,msg_buffer);
                     wattroff(msgs,COLOR_PAIR(1));
-                    wrefresh(msgs);
                     matrix[4][3].entidad = NULL;
                     player->eat(player,1);
                 }
@@ -274,10 +277,12 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                         int dmg = (rand() % 12) * player->pAnimalC->ataque;
                         matrix[3][4].entidad->hitHP(matrix[3][4].entidad,dmg);
                         if(dmg > 0)
-                            mvwprintw(msgs,2, 1,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                        {
+                            sprintf(msg_string,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                            draw_msg(msg_string,msg_buffer);
+                        }
                         else
-                            mvwprintw(msgs,2, 1,"El animal esquiva tu intento de atacarlo.");
-                        wrefresh(msgs);
+                            draw_msg("El animal esquiva tu intento de atacarlo.",msg_buffer);
                     }                  //Si no, comer:
                     else if(matrix[3][4].entidad->tipo == 'x') //Alimentarse de un cadaver.
                     {
@@ -285,10 +290,9 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                         player->hitHP(player,-heal);
                         matrix[3][4].entidad->eat(matrix[3][4].entidad,-1);
                         wattron(msgs,COLOR_PAIR(1));
-                        mvwprintw(msgs,2, 1,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
-                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        sprintf(msg_string,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
+                        draw_msg(msg_string,msg_buffer);
                         wattroff(msgs,COLOR_PAIR(1));
-                        wrefresh(msgs);
                         player->eat(player,1);
                     }
                     return 1;
@@ -302,10 +306,9 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                     int heal = (rand()%20);
                     player->hitHP(player,-heal);
                     wattron(msgs,COLOR_PAIR(1));
-                    mvwprintw(msgs,2, 1,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[3][4].entidad->pPlanta->nombre,heal);
-                    mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                    sprintf(msg_string,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[3][4].entidad->pPlanta->nombre,heal);
+                    draw_msg(msg_string,msg_buffer);
                     wattroff(msgs,COLOR_PAIR(1));
-                    wrefresh(msgs);
                     matrix[3][4].entidad = NULL;
                     player->eat(player,1);
                 }
@@ -340,10 +343,12 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                         int dmg = (rand() % 12) * player->pAnimalC->ataque;
                         matrix[5][4].entidad->hitHP(matrix[5][4].entidad,dmg);
                         if(dmg > 0)
-                            mvwprintw(msgs,2, 1,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                        {
+                            sprintf(msg_string,"Atacas al animal! Le haces %d HP de daño!          ",dmg);
+                            draw_msg(msg_string,msg_buffer);
+                        }
                         else
-                            mvwprintw(msgs,2, 1,"El animal esquiva tu intento de atacarlo.");
-                        wrefresh(msgs);
+                            draw_msg("El animal esquiva tu intento de atacarlo.",msg_buffer);
                     }                  //Si no, comer:
                     else if(matrix[5][4].entidad->tipo == 'x') //Alimentarse de un cadaver.
                     {
@@ -351,10 +356,9 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                         player->hitHP(player,-heal);
                         matrix[5][4].entidad->eat(matrix[5][4].entidad,-1);
                         wattron(msgs,COLOR_PAIR(1));
-                        mvwprintw(msgs,2, 1,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
-                        mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                        sprintf(msg_string,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
+                        draw_msg(msg_string,msg_buffer);
                         wattroff(msgs,COLOR_PAIR(1));
-                        wrefresh(msgs);
                         player->eat(player,1);
                     }
                     return 1;
@@ -368,10 +372,9 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                     int heal = (rand()%20);
                     player->hitHP(player,-heal);
                     wattron(msgs,COLOR_PAIR(1));
-                    mvwprintw(msgs,2, 1,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[5][4].entidad->pPlanta->nombre,heal);
-                    mvwprintw(msgs,3, 1,"%s", "                                                       ");
+                    sprintf(msg_string,"Te alimentas de la %s. Recuperas %d HP!          ",matrix[5][4].entidad->pPlanta->nombre,heal);
+                    draw_msg(msg_string,msg_buffer);
                     wattroff(msgs,COLOR_PAIR(1));
-                    wrefresh(msgs);
                     matrix[5][4].entidad = NULL;
                     player->eat(player,1);
                 }

@@ -1,6 +1,8 @@
 #include "Cell.h"
+#include "window.h"
 
 extern WINDOW *msgs;
+extern char msg_buffer[5][55];
 
 int carnivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
 {
@@ -8,17 +10,21 @@ int carnivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
     //Posiciones adjacentes al jugador.
     if( (    (i == 4) &&  (  (j == 5) || (j == 3)  )  ) || (  (j == 4) && ( (i == 3) || (i == 5)  )  )  )
     {
-        int dmg = (rand() % 6) * matrix[i][j].entidad->pAnimalC->ataque;
+        int dmg = (rand() % 7) * matrix[i][j].entidad->pAnimalC->ataque;
         player->hitHP(player,dmg);
         char name[20];
         matrix[i][j].entidad->getName(matrix[i][j].entidad,name);
+        char msg_string[55];
+        sprintf(msg_string,"El %s te ataca, hace %d HP de daño!          ",name,dmg);
         if(dmg>0)
-            mvwprintw(msgs,2, 1,"El %s te ataca, hace %d HP de daño!          ",name,dmg);
+            draw_msg(msg_string,msg_buffer);
         else
-            mvwprintw(msgs,2, 1,"El %s intenta atacarte, pero logras evadirlo.",name);
-        mvwprintw(msgs,3, 1,"                       ");
+        {
+            sprintf(msg_string,"El %s intenta atacarte, pero logras evadirlo.",name);
+            draw_msg(msg_string,msg_buffer);
+        }
         if(dmg > 20)
-            mvwprintw(msgs,3, 1,"Es un golpe critico!");
+            draw_msg("Es un golpe critico!",msg_buffer);
         wrefresh(msgs);
         return dmg;
     }

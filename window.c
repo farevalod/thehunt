@@ -72,13 +72,10 @@ void draw_welcome(WINDOW *main_win, WINDOW *msg_win, struct Animal **player)
 {
     //Mensajes de bienvenida.
     wattron(msg_win,COLOR_PAIR(2));
-    mvwprintw(msg_win,1, 1,"%s", "THE HUNT FOR LIFE");
+    draw_msg("THE HUNT FOR LIFE",msg_buffer);
     wattroff(msg_win,COLOR_PAIR(2));
-    mvwprintw(msg_win,2, 1,"Iniciando simulacion de ecosistema...");
-    wrefresh(msg_win);
-    mvwprintw(msg_win,3, 1,"Duracion del juego: 20 comidas.");
+    draw_msg("Iniciando simulacion de ecosistema...",msg_buffer);
     chooseAnimalMenu(main_win,player);
-    mvwprintw(msg_win,3, 1,"                               ");
     return;
 }
 
@@ -151,6 +148,36 @@ void draw_stats(WINDOW *stat_window, struct Animal *player, int lim)
     mvwprintw(stat_window,1,1,"HP: %d  ",player->getHP(player));
     mvwprintw(stat_window,2,1,"Comidas: %d / %d",player->eat(player,0),lim);
     wrefresh(stat_window);
+    return;
+}
+
+void draw_msg(char *msg, char buffer[5][55])
+{
+    strcpy(buffer[0],buffer[1]);
+    strcpy(buffer[1],buffer[2]);
+    strcpy(buffer[2],buffer[3]);
+    strcpy(buffer[3],buffer[4]);    
+    strcpy(buffer[4],msg);
+    int i;
+    for(i=0;i<5;i++)
+    {
+        if(buffer[i][0] == 'T')
+            wattron(msgs,COLOR_PAIR(1));
+        if(buffer[i][0] == 'E')
+            wattron(msgs,COLOR_PAIR(2));
+        if(buffer[i][0] == 'A')
+            wattron(msgs,COLOR_PAIR(4));
+        
+        mvwprintw(msgs,2+i, 1,"%s                     ",buffer[i]);
+        
+        if(buffer[i][0] == 'T')
+            wattroff(msgs,COLOR_PAIR(1));
+        if(buffer[i][0] == 'E')
+            wattroff(msgs,COLOR_PAIR(2));
+        if(buffer[i][0] == 'A')
+            wattroff(msgs,COLOR_PAIR(4));
+    }    
+    wrefresh(msgs);
     return;
 }
 
