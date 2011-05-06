@@ -4,13 +4,13 @@
 
 extern WINDOW *msgs;
 
-int initMatrix(struct Cell matrix[9][9])
-{
+int initMatrix(struct Cell matrix[9][9])        //Se inicializan las coordenadas en pantalla
+{                                               //para cada celda.
     int i, j;
     for(i=0;i<9;i++)
         for(j=0;j<9;j++)
         {
-            matrix[i][j].entidad = NULL;
+            matrix[i][j].entidad = NULL;        //No hay entidaes cargadas por default.
             matrix[i][j].xpos = 1+i*3;
             matrix[i][j].ypos = 3+j*6;
         }
@@ -19,6 +19,9 @@ int initMatrix(struct Cell matrix[9][9])
 
 int makeCell(struct Cell *c, struct Nodo **cList, struct Nodo **hList, struct Nodo **pList)
 {
+    /*  1. Roll 1d100
+        2. Si roll > p, cargar entidad en la celda c.
+    */
     struct Animal *temp;
     //ENTITY SPAWN PROBABILITY
     int pC = 98, pH = 97, pP = 95;
@@ -47,7 +50,10 @@ int makeCell(struct Cell *c, struct Nodo **cList, struct Nodo **hList, struct No
 }
 
 int iterateMatrix(struct Cell matrix[9][9], struct Animal *player)
-{
+{   /*
+        Llama a las funciones de AI, revisa los HP
+        y las comidas restantes para los cadáveres.
+    */
     int i, j;
     char type;
     for(i=0;i<9;i++)
@@ -87,7 +93,22 @@ int iterateMatrix(struct Cell matrix[9][9], struct Animal *player)
 }
 
 int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir)
-{
+{   /*
+        Esta función procesa el input del usuario.
+        Para cada dirección:
+            -Revisa si hay entidad en la casilla de destino:
+                Si no hay, mueve
+                Si hay entidad:
+                    y player carnívoro:
+                        animal vivo: atacarlo
+                        cadaver: alimentarse
+                    player herbivoro:
+                        planta: alimentarse
+
+        La función es bastante larga, es un candidato principal
+        para refactoring. Quizás sería posible abstraer funciones
+        de ataque y alimentación.
+    */
     int i, j;
     switch(dir)
     {

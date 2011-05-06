@@ -4,6 +4,8 @@ extern WINDOW *msgs;
 
 int carnivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
 {
+
+    //Posiciones adjacentes al jugador.
     if( (    (i == 4) &&  (  (j == 5) || (j == 3)  )  ) || (  (j == 4) && ( (i == 3) || (i == 5)  )  )  )
     {
         int dmg = (rand() % 6) * matrix[i][j].entidad->pAnimalC->ataque;

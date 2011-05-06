@@ -7,9 +7,9 @@ Descripcion: Define Animal, AnimalCarnivoro, AnimalHerbivoro, y Planta
 #define PROGENITORES_H
 struct Animal
 {
-    void (*getName) (struct Animal *p, char *buf);
-    int (*getHP) (struct Animal *p);
-    int (*hitHP) (struct Animal *p, int amount);
+    void (*getName) (struct Animal *p, char *buf);  //Guarda el nombre de la entidad en el buffer.
+    int (*getHP) (struct Animal *p);                //Devuelve los HPs de la entidad.  
+    int (*hitHP) (struct Animal *p, int amount);    //Devuelve los HPs de la entidad, menos amount.
     int (*eat)   (struct Animal *p, int inc);
     int (*die)  (struct Animal *p);
     char tipo;    // ‘h’ o‘c’ (o 'p'!) (o 'x'! [cadaver])

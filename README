@@ -1,6 +1,6 @@
 THE HUNT FOR LIFE
 
-Instrucciones: 
+Instrucciones de instalación: 
 1. Descargar e instalar ncurses
 
     #apt-get install libncurses5-dev
@@ -17,6 +17,15 @@ Instrucciones:
 
 2. make
 3. ./hunt
+
+Controles:
+
+    W
+A   S   D    
+
+Para atacar/comer, caminar en la dirección que corresponda.
+
+Para salir: Q
 
 ¡Disfrute el juego!
 

@@ -21,6 +21,15 @@ Funciones:
 
 int nonCanonical()
 {
+    /*
+        Configura el tty para modo no-canónico.
+        Ésto quiere decir, permítame manejar de forma
+        directa todos los inputs de teclado, y hacer
+        read() no-bloqueante.
+        Importante, se debe restaurar el estado original
+        del tty. De otra forma, puede causar problemas,
+        aún después de finalizar la ejecución del programa.
+    */
     struct termios termios_p;
     termios_p.c_cc[VMIN]  =  0;
     termios_p.c_cc[VTIME] =  3;
@@ -32,7 +41,7 @@ int nonCanonical()
 }
 
 int canonical(struct termios *saved)
-{
+{   //Restaura la configuración original del usuario.
     return( tcsetattr( 0, TCSADRAIN, saved ) );
 }
 
@@ -54,10 +63,10 @@ int main()
     init_pair(2, COLOR_RED, -1);
     init_pair(3, COLOR_YELLOW, COLOR_RED);
     init_pair(4, COLOR_YELLOW,-1);
-	keypad(stdscr, TRUE);		/* I need that nifty F1 	*/
+	keypad(stdscr, TRUE);		/* Activa las teclas de control. */
 
-	starty = (LINES - HEIGHT) / 4;	/* Calculating for a center placement */
-	startx = (COLS - WIDTH) / 2;	/* of the window		*/
+	starty = (LINES - HEIGHT) / 4;	/* Calcula la posición del centro de la pantalla */
+	startx = (COLS - WIDTH) / 2;
 	printw("Presione Q para salir");
 	refresh();
 	my_win = create_newwin(HEIGHT, WIDTH, starty, startx);
@@ -70,7 +79,7 @@ int main()
     struct Nodo *cList = NULL;      //  ]
     struct Nodo *hList = NULL;      //   -> Los animales leidos se guardan en éstas listas.
     struct Nodo *pList = NULL;      //  ]
-    loadData(&cList,&hList,&pList);
+    int lim = loadData(&cList,&hList,&pList); //Carga las listas de animales, y devuelve el número de comidas.
     struct Cell matrix[9][9];
     initMatrix(matrix);
     int px = matrix[4][4].xpos;
@@ -86,9 +95,9 @@ int main()
     while(end != 1)
 	{
 	    ch = '0';
-	    read(0,&ch,1);
+	    read(0,&ch,1);      //Se lée el (posible) input del usuario.
 	    if((i % 3) == 0)
-    	    iterateMatrix(matrix,player);
+    	    iterateMatrix(matrix,player);   //Los NPC reaccionan cada 3 ticks.
     	i++;
 	    switch(ch)
 		{	case 'a':
@@ -116,7 +125,7 @@ int main()
 		        break;
 		    default: draw_matrix(my_win,matrix,player);
 		}
-		if(player->eat(player,0) > 10)
+		if(player->eat(player,0) > lim)
 		{
 		    mvwprintw(msgs,2, 1,"%s", "Limite de comidas alcanzado! Felicitaciones!           ");
             mvwprintw(msgs,3, 1,"%s", "                                                       ");

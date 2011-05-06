@@ -8,6 +8,7 @@ int WIDTH = 55;
 
 void chooseAnimalMenu(WINDOW *win, struct Animal **player)
 {
+    //Menu para seleccionar animal.    
     int i = 0,j = 0, nCarnivoros, nHerbivoros;
     FILE *fp = fopen("carnivores.txt","r");
     fscanf(fp,"%d",&nCarnivoros);
@@ -59,6 +60,7 @@ void chooseAnimalMenu(WINDOW *win, struct Animal **player)
 
 void draw_grass(WINDOW *local_win, int x, int y)
 {
+    //Dibujar el pasto sobre el mapa.
 	wattron(local_win,COLOR_PAIR(1));
     mvwprintw(local_win,x, y,"%c",(44 + 2*(rand()%2)));
     wrefresh(local_win);
@@ -68,6 +70,7 @@ void draw_grass(WINDOW *local_win, int x, int y)
 
 void draw_welcome(WINDOW *main_win, WINDOW *msg_win, struct Animal **player)
 {
+    //Mensajes de bienvenida.
     wattron(msg_win,COLOR_PAIR(2));
     mvwprintw(msg_win,1, 1,"%s", "THE HUNT FOR LIFE");
     wattroff(msg_win,COLOR_PAIR(2));
@@ -82,8 +85,9 @@ void draw_welcome(WINDOW *main_win, WINDOW *msg_win, struct Animal **player)
 
 void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *player)
 {
+    //Recorrer y dibujar la matrix.
     int i, j;           //Contadores de loop
-    int x, y;           //Coordenadas
+    int x, y;           //Coordenadas en pantalla.
     char ch;
     for(i=0;i<9;i++)
     {
@@ -142,9 +146,10 @@ void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *pla
     }
 }
 
-void draw_stats(WINDOW *stat_window, struct Animal *player)
+void draw_stats(WINDOW *stat_window, struct Animal *player, int lim)
 {
     mvwprintw(stat_window,1,1,"HP: %d  ",player->getHP(player));
+    mvwprintw(stat_window,2,1,"Comidas: %d / %d",player->eat(player,0),lim);
     wrefresh(stat_window);
     return;
 }

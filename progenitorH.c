@@ -73,10 +73,7 @@ int getHerbivoreHP(struct Animal *p)
 int hitHHP(struct Animal *p, int amount)
 {
     p->pAnimalH->vida -= amount;
-    if(p->pAnimalH->vida < 0)
-        return 1;
-    else
-        return 0;
+    return p->pAnimalH->vida;
 }
 
 /******** Función: crearHerbivoro ********

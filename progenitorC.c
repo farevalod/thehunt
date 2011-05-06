@@ -69,10 +69,7 @@ int getCarnivoreHP(struct Animal *p)
 int hitCHP(struct Animal *p, int amount)
 {
     p->pAnimalC->vida -= amount;
-    if(p->pAnimalC->vida < 0)
-        return 1;
-    else
-        return 0;
+    return p->pAnimalC->vida;
 }
 
 

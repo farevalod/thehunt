@@ -46,7 +46,6 @@ int loadData(struct Nodo **cList, struct Nodo **hList, struct Nodo **pList)
             }
         }
      }
-    //printf("Datos leidos correctamente.\n");
     fclose(entrada);
-    return 0;
+    return lim;
 }
