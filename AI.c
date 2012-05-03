@@ -8,7 +8,7 @@ int carnivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
 {
 
     //Posiciones adjacentes al jugador.
-    if( (    (i == 4) &&  (  (j == 5) || (j == 3)  )  ) || (  (j == 4) && ( (i == 3) || (i == 5)  )  )  )
+    if(((i==4)&&((j==5)||(j==3)))||((j==4)&&((i==3)||(i==5))))
     {
         int dmg = (rand() % 7) * matrix[i][j].entidad->pAnimalC->ataque;
         player->hitHP(player,dmg);
@@ -28,67 +28,47 @@ int carnivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
         wrefresh(msgs);
         return dmg;
     }
-    if( (i < 3) && (j < 3) )
-    {   if(matrix[i+1][j+1].entidad == NULL)
-        {
-            matrix[i+1][j+1].entidad = matrix[i][j].entidad;
-            matrix[i][j].entidad = NULL;
-            return 0;
-        }
-    }
-    if( (i > 5) && (j > 5) )
+	if((i<3)&&(j<3)&&(!(matrix[i+1][j+1].entidad)))
     {   
-        if(matrix[i-1][j-1].entidad == NULL)
-        {
-            matrix[i-1][j-1].entidad = matrix[i][j].entidad;
-            matrix[i][j].entidad = NULL;
-            return 0;
-        }
+		matrix[i+1][j+1].entidad = matrix[i][j].entidad;
+		matrix[i][j].entidad = NULL;
+		return 0;
     }
-    if( (i > 5) && (j < 3) )
-    {
-        if(matrix[i-1][j+1].entidad == NULL)
-        {
-            matrix[i-1][j+1].entidad = matrix[i][j].entidad;
-            matrix[i][j].entidad = NULL;
-            return 0;
-        }
+	if((i>5)&&(j>5)&&(!(matrix[i-1][j-1].entidad)))
+    {   
+		matrix[i-1][j-1].entidad = matrix[i][j].entidad;
+		matrix[i][j].entidad = NULL;
+		return 0;
     }
-    if( (i < 3) && (j > 5) )
+	if((i>5)&&(j<3)&&(!(matrix[i-1][j+1].entidad)))
     {
-        if(matrix[i+1][j-1].entidad == NULL)
-        {
-            matrix[i+1][j-1].entidad = matrix[i][j].entidad;
-            matrix[i][j].entidad = NULL;
-            return 0;
-        }
+		matrix[i-1][j+1].entidad = matrix[i][j].entidad;
+		matrix[i][j].entidad = NULL;
+		return 0;
     }
-    if(i>4)
+	if((i<3)&&(j>5)&&(!(matrix[i+1][j-1].entidad)))
     {
-        if(matrix[i-1][j].entidad == NULL)
-        {
-            matrix[i-1][j].entidad = matrix[i][j].entidad;
-            matrix[i][j].entidad = NULL;
-            return 0;
-        }
+		matrix[i+1][j-1].entidad = matrix[i][j].entidad;
+		matrix[i][j].entidad = NULL;
+		return 0;
     }
-    if(i<4)
+    if(i>4&&(!(matrix[i-1][j].entidad)))
     {
-        if(matrix[i+1][j].entidad == NULL)
-        {
-            matrix[i+1][j].entidad = matrix[i][j].entidad;
-            matrix[i][j].entidad = NULL;
-            return 0;
-        }
+		matrix[i-1][j].entidad = matrix[i][j].entidad;
+		matrix[i][j].entidad = NULL;
+		return 0;
     }
-    if(j>4)
+    if(i<4&&(!(matrix[i+1][j].entidad)))
     {
-        if(matrix[i][j-1].entidad == NULL)
-        {
-            matrix[i][j-1].entidad = matrix[i][j].entidad;
-            matrix[i][j].entidad = NULL;
-            return 0;
-        }
+		matrix[i+1][j].entidad = matrix[i][j].entidad;
+		matrix[i][j].entidad = NULL;
+		return 0;
+    }
+    if(j>4 && (!(matrix[i][j-1].entidad)))
+    {
+		matrix[i][j-1].entidad = matrix[i][j].entidad;
+		matrix[i][j].entidad = NULL;
+		return 0;
     }
     if(j<4)
     {
@@ -107,11 +87,11 @@ int carnivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
 int herbivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
 {
     int salto = matrix[i][j].entidad->pAnimalH->rand_mov;
-    if( (i == 4) &&  (  (j == 5) || (j == 3)  ) )
+	if((i==4)&&((j==5)||(j==3)))
     {
         if((rand() % 3) == 0)
         {
-            if(matrix[(i+salto)%8][j].entidad == NULL)
+            if(!(matrix[(i+salto)%8][j].entidad))
             {
                     matrix[i+salto][j].entidad = matrix[i][j].entidad;
                     matrix[i][j].entidad = NULL;
@@ -120,7 +100,7 @@ int herbivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
         }
         else
         {
-            if(matrix[i-1][j].entidad == NULL)
+            if(!(matrix[i-1][j].entidad))
             {
                     matrix[i-1][j].entidad = matrix[i][j].entidad;
                     matrix[i][j].entidad = NULL;
@@ -130,9 +110,9 @@ int herbivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
     }
     if(  (j == 4) && ( (i == 3) || (i == 5)  )  )
     {
-        if((rand() % 3) == 0)
+        if(!(rand() % 3))
         {
-            if(matrix[i][(j-salto)%8].entidad == NULL)
+            if(!(matrix[i][(j-salto)%8].entidad))
             {
                     matrix[i][(j-salto)%8].entidad = matrix[i][j].entidad;
                     matrix[i][j].entidad = NULL;
@@ -141,7 +121,7 @@ int herbivoreAI(struct Cell matrix[9][9], int i, int j,struct Animal *player)
         }
         else
         {
-            if(matrix[i][j+1].entidad == NULL)
+            if(!(matrix[i][j+1].entidad))
             {
                     matrix[i][j+1].entidad = matrix[i][j].entidad;
                     matrix[i][j].entidad = NULL;
