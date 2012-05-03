@@ -6,7 +6,7 @@
 int loadData(struct Nodo **cList, struct Nodo **hList, struct Nodo **pList)
 {
     FILE *entrada = fopen("entrada.txt","r");
-    if(entrada == NULL)
+    if(!entrada)
     {
         printf("ERROR: Archivo entrada.txt no existe.\n\n");
         printf("Se debe crear un archivo con datos para\n");
@@ -29,12 +29,12 @@ int loadData(struct Nodo **cList, struct Nodo **hList, struct Nodo **pList)
         for(i=0;i<num;i++)
         {
             p = (struct Animal *)malloc(sizeof(struct Animal));
-            if(tipo == 'c' || tipo == 'C')
+			if(tipo=='c'||tipo=='C')
             {
                 crearCarnivoro(&p,0);
                 insert(cList,p);
             }
-            else if(tipo == 'h' || tipo == 'H')
+			else if(tipo=='h'||tipo=='H')
             {
                 crearHerbivoro(&p,0);
                 insert(hList,p);

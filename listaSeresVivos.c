@@ -21,7 +21,7 @@ void insert(struct Nodo **head, void *ptrAnimal)
     struct Nodo *top;
     struct Nodo *newNode;
     newNode = (struct Nodo *)(malloc(sizeof(struct Nodo)));
-    if(newNode == NULL)
+    if(!newNode)
     {
         printf("ERROR: malloc devuelve puntero NULL.\n");
         printf("Posible causa: OOM\n");
@@ -29,13 +29,13 @@ void insert(struct Nodo **head, void *ptrAnimal)
     }
     newNode->ptrAnimal = (struct Animal*)ptrAnimal; //Se enlaza la entidad al nodo.
     newNode->next = NULL;
-    if(*head==NULL)         //Lista vacía: El nodo nuevo es la cabecera.
+    if(!(*head))         //Lista vacía: El nodo nuevo es la cabecera.
     {
         *head = newNode;
         return;
     }
     top = *head;
-    while(top->next!=NULL)  //Lista no-vacía: Se recorre hasta el final
+    while(top->next)  //Lista no-vacía: Se recorre hasta el final
         top=top->next;
     top->next=newNode;      //Y se agrega el nuevo nodo.
     return;
@@ -43,7 +43,7 @@ void insert(struct Nodo **head, void *ptrAnimal)
 
 void pop(struct Nodo **head, struct Animal **ret)
 {
-    if(*head == NULL)
+    if(!(*head))
     {
         //printf("ERROR: pop() a lista vacia!\n");
         ret = NULL;
@@ -53,4 +53,3 @@ void pop(struct Nodo **head, struct Animal **ret)
     *head = (*head)->next;
     return;
 }
-        
