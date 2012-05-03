@@ -28,19 +28,19 @@ int makeCell(struct Cell *c, struct Nodo **cList, struct Nodo **hList, struct No
     int pC = 98, pH = 97, pP = 95;
     int roll = (rand()%100);
     
-    if((roll > pC)? 1 : 0)
+    if(roll > pC)
     {
         pop(cList,&temp);
         c->entidad = temp;
         return 1;
     }
-    if((roll > pH)? 1 : 0)
-    {
+    if(roll > pH)
+	{
         pop(hList,&temp);
         c->entidad = temp;
         return 1;
     }
-    if((roll > pP)? 1 : 0)
+    if(roll > pP)
     {
         pop(pList,&temp);
         c->entidad = temp;
@@ -126,8 +126,8 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                 {
                     for(j=0;j<8;j++)
                     {
-                        if((i != 4) || (j != 4)) //El animal del jugador (en 4,4) no se mueve.
-                            matrix[i][j].entidad = matrix[i][j+1].entidad;
+						if((i!=4)||(j!=4))//Elanimaldeljugador(en4,4)nosemueve.
+						matrix[i][j].entidad = matrix[i][j+1].entidad;
                     }
                     makeCell(&matrix[i][8],cList,hList,pList);
                 } 
@@ -151,7 +151,7 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                     }                  //Si no, comer:
                     else if(matrix[4][5].entidad->tipo == 'x') //Alimentarse de un cadaver.
                     {
-                        int heal = (rand()%20);
+                        int heal = (rand()%10);
                         player->hitHP(player,-heal);
                         matrix[4][5].entidad->eat(matrix[4][5].entidad,-1);
                         wattron(msgs,COLOR_PAIR(1));
@@ -193,7 +193,7 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                 {
                     for(j=8;j>0;j--)
                     {
-                        if((i != 4) || (j != 4)) //El animal del jugador (en 4,4) no se mueve.
+						if((i!=4)||(j!=4))//Elanimaldeljugador(en4,4)nosemueve.
                             matrix[i][j].entidad = matrix[i][j-1].entidad;
                     }
                     makeCell(&matrix[i][0],cList,hList,pList);
@@ -251,7 +251,7 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
         }
         case 'u':
         {
-            if(matrix[3][4].entidad == NULL) //Si no hay entidad, mover.
+            if(!matrix[3][4].entidad) //Si no hay entidad, mover.
             {
                 for(j=0;j<9;j++)
                 {
@@ -317,7 +317,7 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
         }
         case 'd':
         {
-            if(matrix[5][4].entidad == NULL) //Si no hay entidad, mover.
+            if(!matrix[5][4].entidad) //Si no hay entidad, mover.
             {            
                 for(j=0;j<9;j++)
                 {
