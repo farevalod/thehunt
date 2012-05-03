@@ -21,7 +21,7 @@ Retorno:    void. Modifica los punteros que recibe como args.
 void getDatosPlanta(char *name, int n)
 {
     FILE *plantData = fopen("plants.txt","r");
-    if(plantData == NULL)
+    if(!plantData)
     {
         printf("ERROR: Archivo plants.txt no existe.\n\n");
         printf("Se debe crear un archivo con datos para\n");

@@ -23,7 +23,7 @@ Retorno:    void. Modifica los punteros que recibe como args.
 void getDatosHerbivoro(char *name, int *hp, int *def, int *mov, int n)
 {
     FILE *herbivoreData = fopen("herbivores.txt","r");
-    if(herbivoreData == NULL)
+    if(!herbivoreData)
     {
         printf("ERROR: Archivo herbivores.txt no existe.\n\n");
         printf("Se debe crear un archivo con datos para\n");

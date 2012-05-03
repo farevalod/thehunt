@@ -79,7 +79,6 @@ void draw_welcome(WINDOW *main_win, WINDOW *msg_win, struct Animal **player)
     return;
 }
 
-
 void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *player)
 {
     //Recorrer y dibujar la matrix.
@@ -106,7 +105,7 @@ void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *pla
                     case 'h':
                         wattron(local_win,COLOR_PAIR(1));
                         mvwprintw(local_win,x,y,"%c",name[0]);
-                        wattroff(local_win,COLOR_PAIR(1));                        
+                        wattroff(local_win,COLOR_PAIR(1));
                         continue;
                 }
             }
@@ -134,8 +133,8 @@ void draw_matrix(WINDOW *local_win, struct Cell matrix[9][9], struct Animal *pla
                         wattron(local_win,COLOR_PAIR(3));
                         mvwprintw(local_win,x,y,"x");
                         wattroff(local_win,COLOR_PAIR(3));
-                        continue;                        
-                }                                               
+                        continue;
+                }
             }
             else
                 draw_grass(local_win,x,y);
@@ -156,7 +155,7 @@ void draw_msg(char *msg, char buffer[5][55])
     strcpy(buffer[0],buffer[1]);
     strcpy(buffer[1],buffer[2]);
     strcpy(buffer[2],buffer[3]);
-    strcpy(buffer[3],buffer[4]);    
+    strcpy(buffer[3],buffer[4]);
     strcpy(buffer[4],msg);
     int i;
     for(i=0;i<5;i++)
@@ -167,29 +166,23 @@ void draw_msg(char *msg, char buffer[5][55])
             wattron(msgs,COLOR_PAIR(2));
         if(buffer[i][0] == 'A')
             wattron(msgs,COLOR_PAIR(4));
-        
         mvwprintw(msgs,2+i, 1,"%s                     ",buffer[i]);
-        
         if(buffer[i][0] == 'T')
             wattroff(msgs,COLOR_PAIR(1));
         if(buffer[i][0] == 'E')
             wattroff(msgs,COLOR_PAIR(2));
         if(buffer[i][0] == 'A')
             wattroff(msgs,COLOR_PAIR(4));
-    }    
+    }
     wrefresh(msgs);
     return;
 }
 
 WINDOW *create_newwin(int HEIGHT, int WIDTH, int starty, int startx)
-{	
+{
     WINDOW *local_win;
-
 	local_win = newwin(HEIGHT, WIDTH, starty, startx);
-	box(local_win, 0 , 0);		/* 0, 0 gives default characters 
-					 * for the vertical and horizontal
-					 * lines			*/
-	wrefresh(local_win);		/* Show that box 		*/
-
+	box(local_win, 0 , 0);
+	wrefresh(local_win);
 	return local_win;
 }
