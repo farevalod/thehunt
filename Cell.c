@@ -78,7 +78,7 @@ int iterateMatrix(struct Cell matrix[9][9], struct Animal *player)
 						herbivoreAI(matrix,i,j,player);
 				}
 				if(type == 'x')
-                    if(matrix[i][j].entidad->eat(matrix[i][j].entidad,0) < 0)
+                    if(matrix[i][j].entidad->eat(matrix[i][j].entidad,0) < 1)
                         matrix[i][j].entidad = NULL;
             }
         }
@@ -146,7 +146,8 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                     {
                         int heal = (rand()%10);
                         player->hitHP(player,-heal);
-                        matrix[4][5].entidad->eat(matrix[4][5].entidad,-1);
+                        if(!matrix[4][5].entidad->eat(matrix[4][5].entidad,-1))
+							matrix[4][5].entidad = NULL; //Eliminar cadaver cuando ya fue comido
                         wattron(msgs,COLOR_PAIR(1));
                         sprintf(msg_string,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
                         draw_msg(msg_string,msg_buffer);
@@ -214,7 +215,8 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                     {
                         int heal = (rand()%20);
                         player->hitHP(player,-heal);
-                        matrix[4][3].entidad->eat(matrix[4][3].entidad,-1);
+                        if(!matrix[4][3].entidad->eat(matrix[4][3].entidad,-1))
+							matrix[4][3].entidad = NULL; //Eliminar cadaver cuando ya fue comido
                         wattron(msgs,COLOR_PAIR(1));
                         sprintf(msg_string,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
                         draw_msg(msg_string,msg_buffer);
@@ -281,7 +283,8 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                     {
                         int heal = (rand()%20);
                         player->hitHP(player,-heal);
-                        matrix[3][4].entidad->eat(matrix[3][4].entidad,-1);
+                        if(!matrix[3][4].entidad->eat(matrix[3][4].entidad,-1))
+							matrix[3][4].entidad = NULL; //Eliminar cadaver cuando ya fue comido
                         wattron(msgs,COLOR_PAIR(1));
                         sprintf(msg_string,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
                         draw_msg(msg_string,msg_buffer);
@@ -347,7 +350,8 @@ int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, 
                     {
                         int heal = (rand()%20);
                         player->hitHP(player,-heal);
-                        matrix[5][4].entidad->eat(matrix[5][4].entidad,-1);
+                        if(!matrix[5][4].entidad->eat(matrix[5][4].entidad,-1))
+							matrix[5][4].entidad = NULL; //Eliminar cadaver cuando ya fue comido
                         wattron(msgs,COLOR_PAIR(1));
                         sprintf(msg_string,"Te alimentas del cadaver. Recuperas %d HP!          ",heal);
                         draw_msg(msg_string,msg_buffer);

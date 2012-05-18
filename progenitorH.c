@@ -51,10 +51,7 @@ void getHerbivoreName(struct Animal *p, char *buf)
 
 int eatH(struct Animal *p, int inc)
 {
-    if(inc == 1)
-        p->pAnimalH->nro_comidas++;
-    if(inc == -1)
-        p->pAnimalH->nro_comidas--;
+    p->pAnimalH->nro_comidas += inc;
     return p->pAnimalH->nro_comidas;
 }
 

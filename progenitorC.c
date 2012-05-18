@@ -45,12 +45,9 @@ void getCarnivoreName(struct Animal *p, char *buf)
     return;
 }
 
-int eatC(struct Animal *p,int inc)
+int eatC(struct Animal *p, int inc)
 {
-    if(inc == 1)
-        p->pAnimalC->nro_comidas++;
-    if(inc == -1)
-        p->pAnimalC->nro_comidas--;
+    p->pAnimalC->nro_comidas += inc;
     return p->pAnimalC->nro_comidas;
 }
 
@@ -72,7 +69,6 @@ int hitCHP(struct Animal *p, int amount)
     return p->pAnimalC->vida;
 }
 
-
 /******** Función: crearCarnivoro ********
 Descripcion: Crea un nuevo carnívoro al azar.
              Pide memoria, y carga los datos (via getDatosCarnivoro)
@@ -81,7 +77,7 @@ Parámetros: struct Animal **ptr: Puntero NULL donde se guardará la entidad.
 Retorno:    void. Modifica el punteros que recibe como arg.
 ************************************************/
 
-void crearCarnivoro(struct Animal **ptr,int n)
+void crearCarnivoro(struct Animal **ptr, int n)
 {
     struct AnimalCarnivoro *paC = (struct AnimalCarnivoro *)malloc(sizeof(struct AnimalCarnivoro));
     *ptr = (struct Animal *)malloc(sizeof(struct Animal));
