@@ -34,10 +34,8 @@ int nonCanonical()
     struct termios termios_p;
     termios_p.c_cc[VMIN]  =  0;
     termios_p.c_cc[VTIME] =  3;
-        termios_p.c_lflag &= ~( ECHO|ICANON|ISIG|
-              ECHOE|ECHOK|ECHONL );
+	termios_p.c_lflag &= ~( ECHO|ICANON|ISIG|ECHOE|ECHOK|ECHONL );
     termios_p.c_oflag &= ~( OPOST );
-    
     return( tcsetattr( 0, TCSADRAIN, &termios_p ) );
 }
 
@@ -93,31 +91,31 @@ int main()
 
     nonCanonical();
     char ch; int end; int i = 0; int j = 0;
-    while(end != 1)
+    while(!end)
 	{
 	    ch = '0';
 	    read(0,&ch,1);      //Se lée el (posible) input del usuario.
-	    if((i % 3) == 0)
+	    if(!(i % 3))
     	    iterateMatrix(matrix,player);   //Los NPC reaccionan cada 3 ticks.
     	i++;
 	    switch(ch)
 		{	case 'a':
-		        if(apply(matrix,player,&cList,&hList,&pList,'l') == 0)
+		        if(!apply(matrix,player,&cList,&hList,&pList,'l'))
 	                draw_matrix(my_win,matrix,player);
                	wrefresh(my_win);
 				break;
 			case 'd':
-			    if(apply(matrix,player,&cList,&hList,&pList,'r') == 0)
+			    if(!apply(matrix,player,&cList,&hList,&pList,'r'))
     	            draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
 				break;
 			case 'w':
-			    if(apply(matrix,player,&cList,&hList,&pList,'u') == 0)
+			    if(!apply(matrix,player,&cList,&hList,&pList,'u'))
 	                draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
    				break;
 			case 's':
-			    if(apply(matrix,player,&cList,&hList,&pList,'d') == 0)
+			    if(!apply(matrix,player,&cList,&hList,&pList,'d'))
 	                draw_matrix(my_win,matrix,player);
 	            wrefresh(my_win);
 				break;
@@ -135,7 +133,7 @@ int main()
             getch();
 		    end = 1;
 		}
-		if(player != NULL)
+		if(player)
 		    draw_stats(stats, player, lim);
 		if(player->getHP(player) < 1)
 		{
