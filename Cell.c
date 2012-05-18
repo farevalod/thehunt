@@ -66,25 +66,18 @@ int iterateMatrix(struct Cell matrix[9][9], struct Animal *player)
             if( (i != 4) || (j != 4) )
             {
                 type = matrix[i][j].entidad->tipo;
-                if(type == 'c')
-                {
-                    if(matrix[i][j].entidad->getHP(matrix[i][j].entidad) < 1)
-                    {
-                        matrix[i][j].entidad->die(matrix[i][j].entidad);    //Chao animal.
-                    }
-                    else
-                        carnivoreAI(matrix,i,j,player);
-                }
-                if(type == 'h')
-                {
-                    if(matrix[i][j].entidad->getHP(matrix[i][j].entidad) < 1)
-                    {
-                        matrix[i][j].entidad->die(matrix[i][j].entidad);    //Chao animal.
-                    }
-                    else
-                        herbivoreAI(matrix,i,j,player);
-                }
-                if(type == 'x')
+				if(matrix[i][j].entidad->getHP(matrix[i][j].entidad) < 1)
+				{
+					matrix[i][j].entidad->die(matrix[i][j].entidad);    //Chao animal.
+				}
+				else
+				{
+					if(type == 'c')
+						carnivoreAI(matrix,i,j,player);
+					else if(type == 'h')
+						herbivoreAI(matrix,i,j,player);
+				}
+				if(type == 'x')
                     if(matrix[i][j].entidad->eat(matrix[i][j].entidad,0) < 0)
                         matrix[i][j].entidad = NULL;
             }
@@ -92,24 +85,24 @@ int iterateMatrix(struct Cell matrix[9][9], struct Animal *player)
     }
     return 0;
 }
+/*
+	Esta función procesa el input del usuario.
+	Para cada dirección:
+		-Revisa si hay entidad en la casilla de destino:
+			Si no hay, mueve
+			Si hay entidad:
+				y player carnívoro:
+					animal vivo: atacarlo
+					cadaver: alimentarse
+				player herbivoro:
+					planta: alimentarse
 
+	La función es bastante larga, es un candidato principal
+	para refactoring. Quizás sería posible abstraer funciones
+	de ataque y alimentación.
+*/
 int apply(struct Cell matrix[9][9], struct Animal *player, struct Nodo **cList, struct Nodo **hList, struct Nodo **pList, char dir)
-{   /*
-        Esta función procesa el input del usuario.
-        Para cada dirección:
-            -Revisa si hay entidad en la casilla de destino:
-                Si no hay, mueve
-                Si hay entidad:
-                    y player carnívoro:
-                        animal vivo: atacarlo
-                        cadaver: alimentarse
-                    player herbivoro:
-                        planta: alimentarse
-
-        La función es bastante larga, es un candidato principal
-        para refactoring. Quizás sería posible abstraer funciones
-        de ataque y alimentación.
-    */
+{   
     int i, j;
     char msg_string[55];
     switch(dir)
