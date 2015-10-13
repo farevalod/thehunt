@@ -90,7 +90,7 @@ int main()
     //y no bloquar la ejecución mientras el usuario juega.
 
     nonCanonical();
-    char ch; int end; int i = 0; int j = 0;
+    char ch; int end = 0; int i = 0; int j = 0;
     while(!end)
 	{
 	    ch = '0';
